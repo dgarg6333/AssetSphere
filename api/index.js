@@ -23,7 +23,7 @@ app.listen(3000,()=>{
     console.log('this is server side');
 });
 
-app.use('/api/route',userRoutes);
+app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
 
 app.use((err,req,res,next)=>{
