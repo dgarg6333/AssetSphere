@@ -17,7 +17,7 @@ export default function FooterCom() {
           <div className='grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6'>
             <div>
               <Footer.Title title='About Us' className='font-bold'/>
-              <div className='py-2'>Deepanshu Garg</div> 
+              <div className='py-2'>Code Sphere!</div> 
               <div></div>
             </div>
             <div>
