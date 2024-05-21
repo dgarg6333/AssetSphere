@@ -42,7 +42,7 @@ export default function FooterCom() {
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  Tweeter
+                  Twitter/X
                 </Footer.Link>
                 <Footer.Link
                   href='https://discord.com/'
