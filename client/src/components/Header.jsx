@@ -57,19 +57,19 @@ export default function Header() {
         </span>
         Sphere
       </Link>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex items-center justify-center lg:justify-end">
         <TextInput
           type='text'
           placeholder='Search...'
           rightIcon={AiOutlineSearch}
-          className='hidden lg:inline'
+          className='hidden lg:inline-block px-4 py-2 border border-gray-300 rounded-lg'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <Button type="submit" className='w-12 h-10 lg:hidden ml-2' color='gray' pill>
+          <AiOutlineSearch />
+        </Button>
       </form>
-      <Button className='w-12 h-10 lg:hidden' color='gray' pill>
-        <AiOutlineSearch />
-      </Button>
       <div className='flex gap-2 md:order-2'>
         <Button  className='w-12 h-10 hidden sm:inline'  color='gray'  pill  onClick={() => dispatch(toggleTheme())}  >
           {theme === 'light' ? <FaSun /> : <FaMoon />}
