@@ -23,8 +23,7 @@ export default function UpdatePost() {
   const { postId } = useParams();
 
   const navigate = useNavigate();
-    const { currentUser } = useSelector((state) => state.user);
-
+  const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     try {
       const fetchPost = async () => {
@@ -87,7 +86,7 @@ export default function UpdatePost() {
 
     e.preventDefault();
     try {
-      const res = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
+      const res = await fetch(`/api/post/updatepost/${postId}/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
