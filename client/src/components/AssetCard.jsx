@@ -40,7 +40,7 @@ export default function AssetCard({ asset }) {
       {/* Image with status badge */}
       <div className="relative h-56 w-full">
         <img
-          src={asset.image || defaultImage}
+          src={asset.image && asset.image !== '' ? asset.image : defaultImage}
           alt={asset.name || 'Asset'}
           className="object-cover w-full h-full"
           onError={(e) => { e.target.onerror = null; e.target.src = defaultImage; }}

@@ -87,7 +87,6 @@ export default function CreateAsset() {
   // --- Form Data State ---
   const [formData, setFormData] = useState({
     name: '',
-    ownerId: '65f1234567890abcdef12345', // Placeholder ownerId
     institutionName: '',
     type: assetTypes[0],
     address: {

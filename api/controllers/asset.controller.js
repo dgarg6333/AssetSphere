@@ -3,7 +3,11 @@ import Asset from '../models/asset.model.js';
 
 export const addAsset = async (req, res, next) => {
     try {
-        const newAsset = new Asset(req.body);
+        const id = req.user.id; // Assuming user is set by verifyToken middleware
+        const newAsset = new Asset({
+            ...req.body,
+            ownerId: id 
+        });
         const savedAsset = await newAsset.save();
         res.status(201).json(savedAsset);
     } catch (error) {
