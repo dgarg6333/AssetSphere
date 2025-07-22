@@ -13,7 +13,7 @@ export default function AssetCard({ asset }) {
   const capacityLocationColor = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
 
 
-  const defaultImage = 'https://placehold.co/600x400?text=No+Image';
+  const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753182643840-download.jpg?alt=media&token=a3069427-679c-4ea7-b9e4-da20a4f4d025';
 
   const getStatusColor = (status) => {
     switch ((status || '').toUpperCase()) {
