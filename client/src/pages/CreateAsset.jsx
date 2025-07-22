@@ -1,0 +1,664 @@
+import { Alert, Button, FileInput, Select, TextInput, Label, Checkbox, Spinner, Textarea } from 'flowbite-react'; // Import Textarea
+import { useState, useEffect } from 'react';
+// import ReactQuill from 'react-quill'; // REMOVE THIS LINE
+// import 'react-quill/dist/quill.snow.css'; // REMOVE THIS LINE
+import { getStorage, uploadBytesResumable, getDownloadURL, ref } from 'firebase/storage';
+import { app } from '../firebase';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from 'react-router-dom';
+
+export default function CreateAsset() {
+  // State variables for form data, UI feedback, and loading states
+  const [file, setFile] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [loadingDistrictData, setLoadingDistrictData] = useState(false);
+  const [publishError, setPublishError] = useState(null);
+  const navigate = useNavigate();
+
+  // --- Enums/Lists for dropdowns and checkboxes ---
+  const assetTypes = ['Hall', 'Lab', 'Hostel', 'ClassRoom'];
+  const featuresList = [
+    'AC',
+    'INTERNET',
+    'PROJECTOR',
+    'AUDIO',
+    'SMART_BOARD'
+  ];
+  const amenitiesList = [
+    'PARKING',
+    'WATER',
+    'TECH_SUPPORT',
+    'LOCKERS',
+    'RESTROOMS',
+    'CLEANING',
+    'BREAKOUT',
+    'COFFEE'
+  ];
+
+  const indianStates = [
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi', 'Lakshadweep', 'Puducherry'
+  ].sort();
+
+  const prominentIndianCitiesByState = {
+    'Andhra Pradesh': ['Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Kurnool'].sort(),
+    'Arunachal Pradesh': ['Itanagar'].sort(),
+    'Assam': ['Guwahati', 'Dibrugarh', 'Silchar', 'Jorhat'].sort(),
+    'Bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur'].sort(),
+    'Chhattisgarh': ['Raipur', 'Bhilai', 'Bilaspur', 'Korba'].sort(),
+    'Goa': ['Panaji', 'Margao'].sort(),
+    'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar', 'Jamnagar'].sort(),
+    'Haryana': ['Faridabad', 'Gurugram', 'Panipat', 'Ambala', 'Rohtak'].sort(),
+    'Himachal Pradesh': ['Shimla', 'Dharamshala'].sort(),
+    'Jharkhand': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City'].sort(),
+    'Karnataka': ['Bengaluru', 'Mysore', 'Hubli-Dharwad', 'Mangalore', 'Belagavi'].sort(),
+    'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kollam'].sort(),
+    'Madhya Pradesh': ['Indore', 'Bhopal', 'Jabalpur', 'Gwalior', 'Ujjain'].sort(),
+    'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad', 'Solapur'].sort(),
+    'Manipur': ['Imphal'].sort(),
+    'Meghalaya': ['Shillong'].sort(),
+    'Mizoram': ['Aizawl'].sort(),
+    'Nagaland': ['Kohima', 'Dimapur'].sort(),
+    'Odisha': ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Berhampur'].sort(),
+    'Punjab': ['Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Mohali'].sort(),
+    'Rajasthan': ['Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur'].sort(),
+    'Sikkim': ['Gangtok'].sort(),
+    'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Tirunelveli'].sort(),
+    'Telangana': ['Hyderabad', 'Warangal', 'Nizamabad', 'Karimnagar'].sort(),
+    'Tripura': ['Agartala'].sort(),
+    'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Ghaziabad', 'Agra', 'Varanasi', 'Meerut', 'Prayagraj'].sort(),
+    'Uttarakhand': ['Dehradun', 'Haridwar', 'Roorkee', 'Haldwani'].sort(),
+    'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri'].sort(),
+    'Andaman and Nicobar Islands': ['Port Blair'].sort(),
+    'Chandigarh': ['Chandigarh'].sort(),
+    'Dadra and Nagar Haveli and Daman and Diu': ['Silvassa', 'Daman', 'Diu'].sort(),
+    'Delhi': ['Delhi'].sort(),
+    'Lakshadweep': ['Kavaratti'].sort(),
+    'Puducherry': ['Puducherry'].sort(),
+  };
+
+  // --- Form Data State ---
+  const [formData, setFormData] = useState({
+    name: '',
+    ownerId: '65f1234567890abcdef12345', // Placeholder ownerId
+    institutionName: '',
+    type: assetTypes[0],
+    address: {
+      street: '',
+      buildingName: '',
+      locality: '',
+      landmark: '',
+      city: '',
+      district: '', // This will be auto-filled
+      state: '',
+      pincode: '', // This will be manually added
+      coordinates: {
+        latitude: '',
+        longitude: ''
+      }
+    },
+    capacity: 1,
+    features: [],
+    amenities: [],
+    description: '', // This will now hold plain text
+    image: '' // Initialized as an empty string
+  });
+
+  // Define your default image URL here
+  const DEFAULT_IMAGE_URL = 'https://via.placeholder.com/600x400?text=No+Image+Available'; // Example placeholder URL (changed to a more reliable placeholder)
+
+  // --- Helper Functions ---
+
+  /**
+   * Fetches the district name based on the selected city and state from a public API.
+   * @param {string} city - The selected city.
+   * @param {string} state - The selected state.
+   */
+  const fetchDistrict = async (city, state) => {
+    if (!city || !state) {
+      // Clear district if city or state is not selected
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          district: '',
+        }
+      }));
+      return;
+    }
+
+    setLoadingDistrictData(true);
+    try {
+      // Using a reliable public API for Indian pincodes by Post Office/City
+      const response = await fetch(`https://api.postalpincode.in/postoffice/${city}`);
+      const data = await response.json();
+
+      if (data && data.length > 0 && data[0].Status === 'Success') {
+        const postOffices = data[0].PostOffice;
+        if (postOffices && postOffices.length > 0) {
+          // Find a post office that matches the selected state (optional, but good for accuracy)
+          // If no specific match, fall back to the first post office found
+          const relevantPostOffice = postOffices.find(po => po.State.toLowerCase() === state.toLowerCase()) || postOffices[0];
+
+          setFormData(prev => ({
+            ...prev,
+            address: {
+              ...prev.address,
+              district: relevantPostOffice.District || '', // Only update district
+            }
+          }));
+        } else {
+          console.warn('No post offices found for the selected city.');
+          setFormData(prev => ({
+            ...prev,
+            address: {
+              ...prev.address,
+              district: '', // Clear if no data
+            }
+          }));
+        }
+      } else {
+        console.warn('API call failed or returned no success status:', data);
+        setFormData(prev => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            district: '', // Clear if API fails
+          }
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching district:', error);
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          district: '', // Clear on error
+        }
+      }));
+    } finally {
+      setLoadingDistrictData(false);
+    }
+  };
+
+  /**
+   * Handles changes for all input types (TextInput, Select, Checkbox, Textarea).
+   * It intelligently updates the formData state, including nested address and coordinates.
+   * Special handling for state and city changes to trigger district fetching.
+   * @param {Event} e - The DOM event object.
+   */
+  const handleChange = (e) => {
+    const { id, value, type, checked } = e.target;
+
+    if (id.startsWith('address.')) {
+      const addressField = id.split('.')[1];
+      setFormData(prev => {
+        const updatedAddress = {
+          ...prev.address,
+          [addressField]: value
+        };
+
+        // Reset city and district when state changes
+        if (addressField === 'state') {
+          updatedAddress.city = '';
+          updatedAddress.district = '';
+        } else if (addressField === 'city') {
+          // Fetch district when city changes, only if a city is selected
+          if (value !== '') {
+            fetchDistrict(value, updatedAddress.state);
+          } else {
+            updatedAddress.district = ''; // Clear district if city is cleared
+          }
+        }
+        return {
+          ...prev,
+          address: updatedAddress
+        };
+      });
+    } else if (id.startsWith('coordinates.')) {
+      const coordField = id.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          coordinates: {
+            ...prev.address.coordinates,
+            [coordField]: parseFloat(value) || '' // Convert to number, or empty string if invalid
+          }
+        }
+      }));
+    } else if (id === 'features' || id === 'amenities') {
+      let updatedList = checked
+        ? [...formData[id], value]
+        : formData[id].filter((item) => item !== value);
+      setFormData({ ...formData, [id]: updatedList });
+    } else {
+      // This now handles 'description' as a simple text input
+      setFormData({ ...formData, [id]: value });
+    }
+  };
+
+  /**
+   * Handles image upload to Firebase Storage.
+   * Shows upload progress and sets download URL upon completion.
+   */
+  const handleUploadImage = async () => {
+    if (!file) {
+      setImageUploadError('Please select an image to upload.');
+      return;
+    }
+    setImageUploadError(null);
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + '-' + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setImageUploadError('Image upload failed (max 2MB, check file type).');
+        setImageUploadProgress(null);
+        console.error('Image upload error:', error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageUploadProgress(null);
+          setImageUploadError(null);
+          setFormData({ ...formData, image: downloadURL });
+        });
+      }
+    );
+  };
+
+  /**
+   * Handles the form submission.
+   * Sends the structured asset data to the backend API.
+   * @param {Event} e - The DOM event object.
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Ensure numerical values are correctly parsed before sending
+      const dataToSend = {
+        ...formData,
+        capacity: parseInt(formData.capacity) || 1,
+        address: {
+          ...formData.address,
+          coordinates: {
+            latitude: parseFloat(formData.address.coordinates.latitude) || 0,
+            longitude: parseFloat(formData.address.coordinates.longitude) || 0
+          }
+        }
+        // No change needed for 'image' here as it's already a string in formData
+      };
+
+      const res = await fetch('/api/asset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPublishError(data.message || 'Something went wrong during asset creation.');
+        return;
+      }
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/`);
+      }
+    } catch (error) {
+      setPublishError('Something went wrong during form submission.');
+      console.error('Form submission error:', error);
+    }
+  };
+
+  return (
+    <div className='p-3 max-w-3xl mx-auto min-h-screen'>
+      <h1 className='text-center text-3xl my-7 font-semibold text-gray-800 dark:text-white'>
+        Register a New Asset
+      </h1>
+      <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
+
+        {/* Basic Asset Information */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Basic Information
+          </h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div>
+              <Label htmlFor='name' value='Asset Name' />
+              <TextInput
+                type='text'
+                placeholder='e.g., Main Auditorium'
+                required
+                id='name'
+                onChange={handleChange}
+                value={formData.name}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='type' value='Asset Type' />
+              <Select id='type' onChange={handleChange} value={formData.type} className='mt-1'>
+                {assetTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </Select>
+            </div>
+            <div className='md:col-span-2'>
+              <Label htmlFor='institutionName' value='Institution Name' />
+              <TextInput
+                type='text'
+                placeholder='e.g., Delhi University'
+                required
+                id='institutionName'
+                onChange={handleChange}
+                value={formData.institutionName}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='capacity' value='Capacity' />
+              <TextInput
+                type='number'
+                placeholder='Minimum 1'
+                required
+                id='capacity'
+                min='1'
+                onChange={handleChange}
+                value={formData.capacity}
+                className='mt-1'
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Address Details */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Address Details
+          </h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div>
+              <Label htmlFor='address.street' value='Street Address' />
+              <TextInput
+                type='text'
+                placeholder='e.g., 123, Main Street'
+                required
+                id='address.street'
+                onChange={handleChange}
+                value={formData.address.street}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='address.buildingName' value='Building Name (Optional)' />
+              <TextInput
+                type='text'
+                placeholder='e.g., Academic Block A'
+                id='address.buildingName'
+                onChange={handleChange}
+                value={formData.address.buildingName}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='address.locality' value='Locality' />
+              <TextInput
+                type='text'
+                placeholder='e.g., Nehru Place'
+                required
+                id='address.locality'
+                onChange={handleChange}
+                value={formData.address.locality}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='address.landmark' value='Landmark (Optional)' />
+              <TextInput
+                type='text'
+                placeholder='e.g., Near India Gate'
+                id='address.landmark'
+                onChange={handleChange}
+                value={formData.address.landmark}
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='address.state' value='State' />
+              <Select
+                id='address.state'
+                required
+                onChange={handleChange}
+                value={formData.address.state}
+                className='mt-1'
+              >
+                <option value=''>Select State</option>
+                {indianStates.map(state => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor='address.city' value='City' />
+              <div className="relative">
+                <Select
+                  id='address.city'
+                  required
+                  onChange={handleChange}
+                  value={formData.address.city}
+                  // Disable city dropdown if state isn't selected or if district data is loading
+                  disabled={!formData.address.state || loadingDistrictData}
+                  className='mt-1'
+                >
+                  <option value=''>Select City</option>
+                  {/* Only show cities for the selected state */}
+                  {formData.address.state && prominentIndianCitiesByState[formData.address.state] &&
+                    prominentIndianCitiesByState[formData.address.state].map(city => (
+                      <option key={city} value={city}>{city}</option>
+                    ))
+                  }
+                </Select>
+                {loadingDistrictData && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <Spinner size="sm" /> {/* Show spinner when fetching district */}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div>
+              <Label htmlFor='address.district' value='District' />
+              <TextInput
+                type='text'
+                placeholder='Auto-filled from City'
+                required
+                id='address.district'
+                onChange={handleChange} // Allow manual override if needed
+                value={formData.address.district}
+                readOnly={!loadingDistrictData && formData.address.district !== ''} // Read-only once filled and not loading
+                disabled={loadingDistrictData} // Disable while loading
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='address.pincode' value='Pincode' />
+              <TextInput
+                type='text'
+                placeholder='e.g., 110001 (6 digits)'
+                required
+                id='address.pincode'
+                pattern='[0-9]{6}' // Enforce 6-digit number
+                title='Pincode must be 6 digits'
+                onChange={handleChange}
+                value={formData.address.pincode}
+                className='mt-1'
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Coordinates */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Geographical Coordinates
+          </h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div>
+              <Label htmlFor='coordinates.latitude' value='Latitude' />
+              <TextInput
+                type='number'
+                placeholder='e.g., 28.6139'
+                required
+                id='coordinates.latitude'
+                onChange={handleChange}
+                value={formData.address.coordinates.latitude}
+                step='any' // Allows decimal numbers
+                className='mt-1'
+              />
+            </div>
+            <div>
+              <Label htmlFor='coordinates.longitude' value='Longitude' />
+              <TextInput
+                type='number'
+                placeholder='e.g., 77.2090'
+                required
+                id='coordinates.longitude'
+                onChange={handleChange}
+                value={formData.address.coordinates.longitude}
+                step='any' // Allows decimal numbers
+                className='mt-1'
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Features Checkboxes */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Features
+          </h2>
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2'>
+            {featuresList.map((feature) => (
+              <div key={feature} className='flex items-center gap-2'>
+                <Checkbox
+                  id='features'
+                  value={feature}
+                  onChange={handleChange}
+                  checked={formData.features.includes(feature)}
+                />
+                <Label htmlFor='features' className='text-sm capitalize cursor-pointer dark:text-gray-300'>
+                  {feature.replace(/_/g, ' ').toLowerCase()}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Amenities Checkboxes */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Amenities
+          </h2>
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2'>
+            {amenitiesList.map((amenity) => (
+              <div key={amenity} className='flex items-center gap-2'>
+                <Checkbox
+                  id='amenities'
+                  value={amenity}
+                  onChange={handleChange}
+                  checked={formData.amenities.includes(amenity)}
+                />
+                <Label htmlFor='amenities' className='text-sm capitalize cursor-pointer dark:text-gray-300'>
+                  {amenity.replace(/_/g, ' ').toLowerCase()}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Upload */}
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Asset Image
+          </h2>
+          <div className='flex flex-col sm:flex-row gap-4 items-center border-4 border-teal-500 border-dotted p-3 rounded-lg'>
+            <FileInput
+              type='file'
+              accept='image/*'
+              onChange={(e) => setFile(e.target.files[0])}
+              className='flex-1'
+            />
+            <Button
+              type='button'
+              gradientDuoTone='purpleToBlue'
+              size='sm'
+              outline
+              onClick={handleUploadImage}
+              disabled={imageUploadProgress !== null || !file}
+              className='min-w-[120px]'
+            >
+              {imageUploadProgress ? (
+                <div className='w-16 h-16'>
+                  <CircularProgressbar
+                    value={imageUploadProgress}
+                    text={`${imageUploadProgress || 0}%`}
+                  />
+                </div>
+              ) : (
+                'Upload Image'
+              )}
+            </Button>
+          </div>
+          {imageUploadError && <Alert color='failure' className='mt-4'>{imageUploadError}</Alert>}
+          {/* Display the uploaded image or the default placeholder */}
+          {formData.image && (
+            <img
+              src={formData.image}
+              alt='Uploaded Asset Image'
+              className='w-full h-72 object-cover rounded-lg mt-4'
+            />
+          )}
+          {!formData.image && (
+            <div className="w-full h-72 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg mt-4 text-gray-500 dark:text-gray-400">
+              No image selected. Upload an image above.
+            </div>
+          )}
+        </div>
+
+        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
+          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
+            Description
+          </h2>
+          <Textarea // Replaced ReactQuill with Flowbite's Textarea
+            placeholder='Write a detailed description for the asset...'
+            required
+            id='description'
+            onChange={handleChange} // Use the generic handleChange
+            value={formData.description}
+            rows={8}
+            className='min-h-[150px] mt-1'
+          />
+        </div>
+
+        <Button type='submit' gradientDuoTone='purpleToPink' className='w-full py-2 text-lg'>
+          Register Asset
+        </Button>
+        {publishError && <Alert className='mt-5' color='failure'>{publishError}</Alert>}
+      </form>
+    </div>
+  );
+}

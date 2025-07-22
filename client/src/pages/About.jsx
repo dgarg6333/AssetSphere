@@ -1,30 +1,41 @@
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // Import useSelector
+
 export default function About() {
+  const { theme } = useSelector((state) => state.theme); // Get theme from Redux store
+
   return (
-    <div className='min-h-screen flex items-center justify-center'>
-      <div className='max-w-2xl mx-auto p-3 text-center'>
-        <div>
-          <h1 className='text-3xl font font-semibold text-center my-7'>
-            About Code Sphere
+    <div className={`min-h-screen flex items-center justify-center p-6 ${theme === 'dark' ? 'dark bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100'}`}>
+      <div className={`max-w-3xl mx-auto p-8 rounded-xl shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105
+        ${theme === 'dark' ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}
+      `}>
+        <div className="flex flex-col items-center">
+          <h1 className={`text-4xl font-extrabold text-center mb-6 leading-tight
+            ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
+          `}>
+            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Asset Sphere</span>
           </h1>
-          <div className='text-md text-gray-500 flex flex-col gap-6'>
-            <p className="text-justify sm:text-base font-normal">
-            Welcome to Code Sphere, your ultimate destination for cutting-edge insights and in-depth knowledge in the realm of modern web development. Founded by a passionate team of tech enthusiasts, our mission is to empower developers and tech aficionados with the latest trends, tutorials, and best practices in the ever-evolving landscape of technology.
+          <div className={`text-lg flex flex-col gap-6 leading-relaxed
+            ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}
+          `}>
+            <p className="text-justify font-normal">
+              Welcome to <span className="font-bold text-lg">Asset Sphere</span>, a pioneering platform designed to revolutionize resource management within government training institutions. Our mission is to transform how valuable assets—ranging from specialized halls and state-of-the-art laboratories to comfortable hostels, modern classrooms, and expert faculty—are utilized across various departments and ministries.
             </p>
 
-            <p className="text-justify sm:text-base font-normal">
-            At Code Sphere, we understand the pivotal role that technologies like React.js, JavaScript, and Next.js play in shaping the digital world. With our comprehensive resources, ranging from insightful blogs to hands-on tutorials, we strive to cater to both beginners and seasoned professionals, fostering a community where knowledge exchange thrives.
+            <p className="text-justify font-normal">
+              <span className="font-bold text-lg">The Core Problem:</span> Many government training institutions possess a wealth of resources that often remain underutilized. This inefficiency stems from a lack of visibility and fragmented coordination between different departments. A department in need of a specific lab for a workshop, or a hall for a seminar, often struggles to discover available resources within other institutions, leading to unnecessary external expenditure and missed opportunities for collaboration.
             </p>
 
-            <p className="text-justify sm:text-base font-normal">
-            What sets us apart is our commitment to delivering not just information, but valuable insights backed by real-world experience. Our team comprises industry experts and seasoned developers who are deeply passionate about sharing their expertise and helping others succeed in their tech journeys.
+            <p className="text-justify font-normal">
+              <span className="font-bold text-lg">Our Solution:</span> Asset Sphere provides a <span className="font-bold text-lg">centralized, intuitive platform</span> that addresses this critical challenge head-on. Institutions can easily <span className="font-bold text-lg">register</span> their diverse assets, providing detailed information about their features, capacity, and availability. Simultaneously, other departments and ministries gain the power to effortlessly <span className="font-bold text-lg">discover, filter, and book</span> these resources based on their precise requirements.
             </p>
 
-            <p className="text-justify sm:text-base font-normal">
-            Whether you're diving into the intricacies of React.js, exploring the endless possibilities of JavaScript, or harnessing the power of Next.js for your projects, Code Sphere is your trusted companion every step of the way.
+            <p className="text-justify font-normal">
+              This system fosters unprecedented transparency and efficiency. By enabling seamless discovery and booking, Asset Sphere ensures that every valuable resource is optimally utilized, reducing redundant expenditures, enhancing inter-departmental collaboration, and ultimately contributing to more effective and economical government operations.
             </p>
 
-            <p className="text-justify sm:text-base font-normal">
-            Join us as we embark on a journey of exploration, innovation, and continuous learning. Together, let's unlock the full potential of technology and shape the future of web development.
+            <p className="text-justify font-normal">
+              Join us in building a future where government assets are managed with unparalleled efficiency, supporting a more connected and productive public sector. Asset Sphere is not just an application; it's a commitment to smarter resource allocation and collaborative growth.
             </p>
           </div>
         </div>
