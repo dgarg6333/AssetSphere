@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Import useSelector for theme
-import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCheckCircle, FaTimesCircle, FaClock } from 'react-icons/fa'; // Added more icons
+import { useSelector } from 'react-redux';
+import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCheckCircle, FaTimesCircle, FaClock, FaCalendarAlt, FaEnvelope, FaUser } from 'react-icons/fa'; // Added FaEnvelope and FaUser for owner details
 
 export default function AssetDetail() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ export default function AssetDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const { theme } = useSelector((state) => state.theme); // Get theme from Redux store
+  const { theme } = useSelector((state) => state.theme);
 
   // Define theme-dependent styles
   const containerBg = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -39,6 +39,7 @@ export default function AssetDetail() {
 
   const getFullAddress = (address) => {
     if (!address) return 'N/A';
+    // Filter out any empty strings or null/undefined values before joining
     return [
       address.buildingName,
       address.street,
@@ -87,20 +88,24 @@ export default function AssetDetail() {
   if (loading) return <div className={`text-center mt-20 text-lg ${textColor}`}>Loading...</div>;
   if (error) return <div className={`text-center text-red-500 mt-20 ${textColor}`}>{error}</div>;
 
-  // Fallback for image if asset.image is null or empty
-  let displayImage = "https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753182643840-download.jpg?alt=media&token=a3069427-679c-4ea7-b9e4-da20a4f4d025";
-  if(asset.image !=""){
-    displayImage = asset.image
-  }
+  // Corrected Image fallback logic:
+  const displayImage = asset.image && asset.image !== ''
+    ? asset.image
+    : 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753182643840-download.jpg?alt=media&token=a3069427-679c-4ea7-b9e4-da20a4f4d025'; // Changed to a generic placeholder for better context
 
+  const handleBookNow = () => {
+    console.log(`Attempting to book asset: ${asset.name} (ID: ${asset._id})`);
+    alert(`Booking feature for "${asset.name}" is coming soon!`);
+  };
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} py-12`}>
       <div className={`max-w-6xl mx-auto px-4 ${containerBg} rounded-xl shadow-lg border ${borderColor} overflow-hidden`}>
         {/* Image Section */}
-        <div className="relative h-96 w-full">
+        <div className="relative h-96 w-full pt-4">
           <img
             src={displayImage}
+            alt={asset.name}
             className="w-full h-full object-cover rounded-t-xl"
             onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/1200x600/F3F4F6/9CA3AF?text=No+Image+Available'; }}
           />
@@ -112,7 +117,7 @@ export default function AssetDetail() {
         {/* Details Section */}
         <div className="p-8 space-y-6">
           <h2 className={`text-4xl font-extrabold ${headingColor}`}>{asset.name}</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className={`flex items-center ${subTextColor}`}>
               <FaMapMarkerAlt className="mr-3 text-xl text-blue-500" />
@@ -139,7 +144,7 @@ export default function AssetDetail() {
             <h3 className={`text-2xl font-bold mb-3 ${headingColor}`}>Description</h3>
             <div
               className={`prose prose-lg max-w-none ${textColor} ${theme === 'dark' ? 'prose-invert' : ''}`}
-              dangerouslySetInnerHTML={{ __html: asset.description }}
+              dangerouslySetInnerHTML={{ __html: asset.description || 'No description available.' }}
             />
           </div>
 
@@ -174,6 +179,39 @@ export default function AssetDetail() {
                   </span>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* --- Owner Details Section --- */}
+          {/* Only show if ownerId exists and has an email */}
+          {asset.ownerId && asset.ownerId.email && (
+            <div className="pt-6"> {/* Add padding top for separation */}
+              <h3 className={`text-2xl font-bold mb-3 ${headingColor}`}>Owner Email</h3>
+              <div className="space-y-2">
+                <p className={`flex items-center text-lg ${textColor}`}>
+                  <FaEnvelope className={`mr-3 text-xl ${subTextColor}`} />
+                  <strong className={textColor}>Email:</strong> <a href={`mailto:${asset.ownerId.email}`} className="text-blue-500 hover:underline">{asset.ownerId.email}</a>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* --- Book Now Button --- */}
+          {/* Placed immediately after Owner Details (if present) or Amenities (if Owner Details isn't present) */}
+          {asset.status && asset.status.toUpperCase() === 'AVAILABLE' && (
+            <div className="pt-6"> {/* Add padding top to separate from content above */}
+              <button
+                onClick={handleBookNow}
+                className={`
+                  w-full flex items-center justify-center py-3 rounded-lg text-xl font-bold
+                  bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md
+                  hover:from-blue-700 hover:to-blue-900 transition-all duration-300 ease-in-out
+                  transform hover:scale-105 active:scale-100
+                `}
+              >
+                <FaCalendarAlt className="mr-3" />
+                Book Now
+              </button>
             </div>
           )}
         </div>

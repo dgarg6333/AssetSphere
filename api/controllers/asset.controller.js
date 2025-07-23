@@ -72,7 +72,7 @@ export const getAsset = async (req, res, next) => {
 export const getAssetById = async (req, res) => {
     const { id } = req.params;
     try {
-      const asset = await Asset.findById(id);
+      const asset = await Asset.findById(id).populate('ownerId', 'email');
   
       if (!asset) {
         return res.status(404).json({ error: 'Asset not found' });
