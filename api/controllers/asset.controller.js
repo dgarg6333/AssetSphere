@@ -1,4 +1,3 @@
-import { errorHandler } from '../utils/error.js';
 import Asset from '../models/asset.model.js';
 
 export const addAsset = async (req, res, next) => {
