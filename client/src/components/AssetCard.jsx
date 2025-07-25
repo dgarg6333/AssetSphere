@@ -13,20 +13,8 @@ export default function AssetCard({ asset }) {
   const capacityLocationColor = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
 
 
-  const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753182643840-download.jpg?alt=media&token=a3069427-679c-4ea7-b9e4-da20a4f4d025';
+  const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753370322944-premium_photo-1679547202918-bf37285d3caf.avif?alt=media&token=ae868477-bdf6-4cf0-8cd4-87bda8c27421';
 
-  const getStatusColor = (status) => {
-    switch ((status || '').toUpperCase()) {
-      case 'AVAILABLE':
-        return 'bg-green-100 text-green-800 border border-green-500';
-      case 'BOOKED':
-        return 'bg-yellow-100 text-yellow-800 border border-yellow-500';
-      case 'UNAVAILABLE':
-        return 'bg-red-100 text-red-800 border border-red-500';
-      default:
-        return 'bg-gray-100 text-gray-800 border border-gray-400';
-    }
-  };
 
   return (
     <div
@@ -37,7 +25,7 @@ export default function AssetCard({ asset }) {
         ${textColor}
       `}
     >
-      {/* Image with status badge */}
+      {/* Image */}
       <div className="relative h-56 w-full">
         <img
           src={asset.image && asset.image !== '' ? asset.image : defaultImage}
@@ -45,15 +33,6 @@ export default function AssetCard({ asset }) {
           className="object-cover w-full h-full"
           onError={(e) => { e.target.onerror = null; e.target.src = defaultImage; }}
         />
-
-        {/* Rectangular Status Badge */}
-        {asset.status && (
-          <div
-            className={`absolute top-3 left-3 px-3 py-1 text-sm font-semibold rounded-md ${getStatusColor(asset.status)}`}
-          >
-            {asset.status}
-          </div>
-        )}
       </div>
 
       {/* Details */}
@@ -81,10 +60,15 @@ export default function AssetCard({ asset }) {
           </div>
         </div>
 
-        {/* View Button */}
+        {/* View Button - Updated Style */}
         <Link
           to={`/asset/${asset._id}`}
-          className="block mt-4 text-center bg-blue-600 text-white py-2.5 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out" // Slightly more padding and smoother transition
+          className={`
+            block mt-4 text-center py-2.5 rounded-md text-white font-semibold
+            bg-gradient-to-r from-purple-600 to-pink-600
+            shadow-md hover:shadow-lg transition-all duration-300 ease-in-out
+            transform hover:scale-105 active:scale-100
+          `}
         >
           View Details
         </Link>

@@ -137,7 +137,7 @@ export const createBooking = async (req, res, next) => {
   try {
     await session.startTransaction();
     
-    const userId = "687f0aa3590bb04fabe20044"; // TODO: Replace with req.user.id
+    const userId = req.user.id;
     const { assetId } = req.params;
     const bookingData = req.body;
     

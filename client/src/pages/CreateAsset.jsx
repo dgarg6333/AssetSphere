@@ -316,7 +316,7 @@ export default function CreateAsset() {
       }
       if (res.ok) {
         setPublishError(null);
-        navigate(`/asset/${data.asset._id}`); // Redirect to the newly created asset page
+        navigate(`/asset/${data._id}`); // Redirect to the newly created asset page
       }
     } catch (error) {
       setPublishError('Something went wrong during form submission.');

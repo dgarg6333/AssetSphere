@@ -1,13 +1,198 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCheckCircle, FaTimesCircle, FaClock, FaCalendarAlt, FaEnvelope, FaUser } from 'react-icons/fa'; // Added FaEnvelope and FaUser for owner details
+import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCalendarAlt, FaEnvelope } from 'react-icons/fa';
+
+// Booking Modal Component
+function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [purpose, setPurpose] = useState('');
+  const [attendeeCount, setAttendeeCount] = useState('');
+  const [specialRequests, setSpecialRequests] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // Theme-dependent styles for the modal
+  const modalBg = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
+  const inputBg = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
+  const inputBorder = theme === 'dark' ? 'border-gray-600' : 'border-gray-300';
+  const successColor = 'text-green-500';
+  const errorColor = 'text-red-500';
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    // Basic validation
+    if (!startDate || !endDate || !purpose || !attendeeCount) {
+      setError('Please fill in all required fields (Start Date, End Date, Purpose, Attendee Count).');
+      setLoading(false);
+      return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      setError('End Date cannot be before Start Date.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/booking/${assetId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+          purpose,
+          attendeeCount: Number(attendeeCount),
+          specialRequests,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        // If the response is not OK, use the error message from the API, or a generic one
+        throw new Error(data.message || data.error || 'Failed to create booking.');
+      }
+      
+      setSuccess(data.message || 'Booking created successfully!'); // Display success message from API or default
+      
+      // Clear form fields after successful booking
+      setStartDate('');
+      setEndDate('');
+      setPurpose('');
+      setAttendeeCount('');
+      setSpecialRequests('');
+
+      // *** MODIFIED: Close the modal after a short delay to allow success message to be seen ***
+      setTimeout(() => {
+        onClose(); 
+        setSuccess(''); // Clear success message when modal closes
+      }, 1500); // Close after 1.5 seconds
+
+    } catch (err) {
+      setError(err.message); // Display the error message
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4 overflow-y-auto">
+      <div className={`${modalBg} rounded-lg shadow-xl p-6 w-full max-w-lg mx-auto my-8 relative ${textColor}`}>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-3xl font-bold z-10"
+          aria-label="Close modal"
+        >
+          &times;
+        </button>
+        <h2 className={`text-3xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          Book {assetName}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-medium mb-1">Start Date</label>
+              <input
+                type="date"
+                id="startDate"
+                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="endDate" className="block text-sm font-medium mb-1">End Date</label>
+              <input
+                type="date"
+                id="endDate"
+                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="purpose" className="block text-sm font-medium mb-1">Purpose</label>
+            <input
+              type="text"
+              id="purpose"
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              placeholder="e.g., Team meeting, Workshop"
+              value={purpose}
+              onChange={(e) => setPurpose(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="attendeeCount" className="block text-sm font-medium mb-1">Attendee Count</label>
+            <input
+              type="number"
+              id="attendeeCount"
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              placeholder="e.g., 10"
+              min="1"
+              value={attendeeCount}
+              onChange={(e) => setAttendeeCount(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="specialRequests" className="block text-sm font-medium mb-1">Special Requests (Optional)</label>
+            <textarea
+              id="specialRequests"
+              rows="3"
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              placeholder="Any specific needs like projector, catering, etc."
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
+            ></textarea>
+          </div>
+
+          {/* MODIFIED: Display error/success messages */}
+          {error && <p className={`${errorColor} text-sm mt-2`}>{error}</p>}
+          {success && <p className={`${successColor} text-sm mt-2`}>{success}</p>}
+
+          <button
+            type="submit"
+            className={`
+              w-full py-3 rounded-lg text-lg font-semibold text-white
+              bg-gradient-to-r from-purple-600 to-pink-600
+              shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
+              transform hover:scale-105 active:scale-100
+              ${loading ? 'opacity-70 cursor-not-allowed' : ''}
+            `}
+            disabled={loading}
+          >
+            {loading ? 'Submitting...' : 'Confirm Booking'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 
 export default function AssetDetail() {
   const { id } = useParams();
   const [asset, setAsset] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false); // State for modal visibility
 
   const { theme } = useSelector((state) => state.theme);
 
@@ -51,52 +236,26 @@ export default function AssetDetail() {
     ].filter(Boolean).join(', ');
   };
 
-  const getStatusBadge = (status) => {
-    const s = (status || '').toUpperCase();
-    let bgColorClass, textColorClass, icon;
-
-    switch (s) {
-      case 'AVAILABLE':
-        bgColorClass = 'bg-green-600';
-        textColorClass = 'text-white';
-        icon = <FaCheckCircle className="mr-1" />;
-        break;
-      case 'BOOKED':
-        bgColorClass = 'bg-yellow-500';
-        textColorClass = 'text-white';
-        icon = <FaClock className="mr-1" />;
-        break;
-      case 'UNAVAILABLE':
-        bgColorClass = 'bg-red-600';
-        textColorClass = 'text-white';
-        icon = <FaTimesCircle className="mr-1" />;
-        break;
-      default:
-        bgColorClass = 'bg-gray-500';
-        textColorClass = 'text-white';
-        icon = null;
-    }
-
-    return (
-      <div className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold ${bgColorClass} ${textColorClass}`}>
-        {icon}
-        <span>{s}</span>
-      </div>
-    );
-  };
-
   if (loading) return <div className={`text-center mt-20 text-lg ${textColor}`}>Loading...</div>;
   if (error) return <div className={`text-center text-red-500 mt-20 ${textColor}`}>{error}</div>;
 
   // Corrected Image fallback logic:
-  const displayImage = asset.image && asset.image !== ''
+  const displayImage = asset?.image && asset.image !== ''
     ? asset.image
-    : 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753182643840-download.jpg?alt=media&token=a3069427-679c-4ea7-b9e4-da20a4f4d025'; // Changed to a generic placeholder for better context
+    : 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753370322944-premium_photo-1679547202918-bf37285d3caf.avif?alt=media&token=ae868477-bdf6-4cf0-8cd4-87bda8c27421'; // Changed to a generic placeholder for better context
 
   const handleBookNow = () => {
-    console.log(`Attempting to book asset: ${asset.name} (ID: ${asset._id})`);
-    alert(`Booking feature for "${asset.name}" is coming soon!`);
+    setIsBookingModalOpen(true); // Open the modal
   };
+
+  const handleCloseBookingModal = () => {
+    setIsBookingModalOpen(false); // Close the modal
+  };
+
+  // Add a check for asset being null after loading and error checks
+  if (!asset) {
+    return <div className={`text-center mt-20 ${textColor}`}>Asset not found.</div>;
+  }
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'} py-12`}>
@@ -109,9 +268,6 @@ export default function AssetDetail() {
             className="w-full h-full object-cover rounded-t-xl"
             onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/1200x600/F3F4F6/9CA3AF?text=No+Image+Available'; }}
           />
-          <div className="absolute top-6 left-6">
-            {getStatusBadge(asset.status)}
-          </div>
         </div>
 
         {/* Details Section */}
@@ -185,7 +341,7 @@ export default function AssetDetail() {
           {/* --- Owner Details Section --- */}
           {/* Only show if ownerId exists and has an email */}
           {asset.ownerId && asset.ownerId.email && (
-            <div className="pt-6"> {/* Add padding top for separation */}
+            <div className="pt-6">
               <h3 className={`text-2xl font-bold mb-3 ${headingColor}`}>Owner Email</h3>
               <div className="space-y-2">
                 <p className={`flex items-center text-lg ${textColor}`}>
@@ -195,27 +351,32 @@ export default function AssetDetail() {
               </div>
             </div>
           )}
-
-          {/* --- Book Now Button --- */}
-          {/* Placed immediately after Owner Details (if present) or Amenities (if Owner Details isn't present) */}
-          {asset.status && asset.status.toUpperCase() === 'AVAILABLE' && (
-            <div className="pt-6"> {/* Add padding top to separate from content above */}
-              <button
-                onClick={handleBookNow}
-                className={`
-                  w-full flex items-center justify-center py-3 rounded-lg text-xl font-bold
-                  bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md
-                  hover:from-blue-700 hover:to-blue-900 transition-all duration-300 ease-in-out
-                  transform hover:scale-105 active:scale-100
-                `}
-              >
-                <FaCalendarAlt className="mr-3" />
-                Book Now
-              </button>
-            </div>
-          )}
+          
+          <div className="pt-6">
+            <button
+              // onClick={handleBookNow}
+              className={`
+                w-full flex items-center justify-center py-3 rounded-lg text-xl font-bold text-white
+                bg-gradient-to-r from-purple-600 to-pink-600
+                shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
+                transform hover:scale-105 active:scale-100
+              `}
+            >
+              <FaCalendarAlt className="mr-3" />
+              Book Now
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Booking Modal Component */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={handleCloseBookingModal}
+        assetName={asset.name}
+        assetId={asset._id}
+        theme={theme}
+      />
     </div>
   );
 }
