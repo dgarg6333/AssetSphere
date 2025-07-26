@@ -234,8 +234,8 @@ export default function DashProfile() {
             <button
               type='button'
               className='w-full py-2 rounded-lg 
-                         bg-blue-800 text-white font-semibold 
-                         hover:bg-blue-900 
+                         bg-yellow-400 text-white font-semibold 
+                         hover:bg-yellow-500
                          transition-colors duration-200'
             >
               Register an Asset

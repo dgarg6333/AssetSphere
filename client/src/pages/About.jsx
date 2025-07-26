@@ -5,17 +5,15 @@ export default function About() {
   const { theme } = useSelector((state) => state.theme); // Get theme from Redux store
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-6 ${theme === 'dark' ? 'dark bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100'}`}>
-      <div className={`max-w-3xl mx-auto p-8 rounded-xl shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105
+    <div className={`min-h-screen flex items-center justify-center p-6 sm:p-10 ${theme === 'dark' ? 'dark bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100'}`}>
+      <div className={`max-w-4xl mx-auto p-8 sm:p-10 rounded-xl shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105
         ${theme === 'dark' ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}
       `}>
         <div className="flex flex-col items-center">
-          <h1 className={`text-4xl font-extrabold text-center mb-6 leading-tight
-            ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
-          `}>
-            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">ATI CTI</span>
+          <h1 className={`text-4xl sm:text-5xl font-extrabold text-center mb-6 sm:mb-8 leading-tight text-blue-800`}> {/* Applied text-blue-800 directly to the h1 */}
+            About <span className="text-blue-800">ATI CTI</span> {/* Ensured span also uses text-blue-800 for full consistency */}
           </h1>
-          <div className={`text-lg flex flex-col gap-6 leading-relaxed
+          <div className={`text-lg sm:text-xl flex flex-col gap-6 sm:gap-8 leading-relaxed
             ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}
           `}>
             <p className="text-justify font-normal">
@@ -35,8 +33,21 @@ export default function About() {
             </p>
 
             <p className="text-justify font-normal">
-              Join us in building a future where government assets are managed with unparalleled efficiency, supporting a more connected and productive public sector. ATI CTI  is not just an application; it's a commitment to smarter resource allocation and collaborative growth.
+              Join us in building a future where government assets are managed with unparalleled efficiency, supporting a more connected and productive public sector. ATI CTI is not just an application; it's a commitment to smarter resource allocation and collaborative growth.
             </p>
+          </div>
+          {/* Updated button to yellow background with white text */}
+          <div className="mt-8">
+            <Link to="/search"> {/* Adjust '/search' if your asset listing page has a different route */}
+              <button
+                type="button"
+                className="px-8 py-3 rounded-lg bg-yellow-400 text-white font-semibold text-lg {/* Changed text color to white */}
+                           hover:bg-yellow-500 transition-colors duration-300 shadow-lg
+                           transform hover:scale-105"
+              >
+                Explore Available Assets
+              </button>
+            </Link>
           </div>
         </div>
       </div>
