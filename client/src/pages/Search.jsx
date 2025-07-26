@@ -1,4 +1,4 @@
-import { Button, Select, TextInput, Label, Checkbox } from 'flowbite-react';
+import { Select, TextInput, Label, Checkbox } from 'flowbite-react'; // Removed Button from import
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AssetCard from '../components/AssetCard';
@@ -16,7 +16,7 @@ export default function Search() {
 
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(false); // Unused, can be removed if not implemented
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -80,8 +80,8 @@ export default function Search() {
       type: typeFromUrl || '',
       features: featuresFromUrl,
       amenities: amenitiesFromUrl,
-      minCapacity: minCapacityFromUrl ? parseInt(minCapacityFromUrl) : undefined, // Set to undefined if not in URL
-      maxCapacity: maxCapacityFromUrl ? parseInt(maxCapacityFromUrl) : undefined  // Set to undefined if not in URL
+      minCapacity: minCapacityFromUrl ? parseInt(minCapacityFromUrl) : undefined,
+      maxCapacity: maxCapacityFromUrl ? parseInt(maxCapacityFromUrl) : undefined
     });
 
     fetchAssets();
@@ -99,7 +99,7 @@ export default function Search() {
       }
       setSidebarData({ ...sidebarData, [id]: updatedList });
     } else if (id === 'minCapacity' || id === 'maxCapacity') {
-      setSidebarData({ ...sidebarData, [id]: value === '' ? undefined : parseInt(value) }); // Store as undefined if empty
+      setSidebarData({ ...sidebarData, [id]: value === '' ? undefined : parseInt(value) });
     } else {
       setSidebarData({ ...sidebarData, [id]: value });
     }
@@ -110,9 +110,7 @@ export default function Search() {
     const urlParams = new URLSearchParams();
 
     Object.entries(sidebarData).forEach(([key, value]) => {
-      // Only add parameters if value is defined, not null, not empty string/array
       if (value !== undefined && value !== null && value !== '' && !(Array.isArray(value) && value.length === 0)) {
-        // Ensure capacity values are valid numbers before sending
         if ((key === 'minCapacity' || key === 'maxCapacity') && isNaN(value)) {
           return;
         }
@@ -142,7 +140,8 @@ export default function Search() {
       <div className={`md:w-72 p-6 md:p-8 border-b md:border-r md:border-b-0 shadow-lg md:shadow-xl transition-all duration-300
         ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}
       `}>
-        <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+        {/* Filter Assets heading changed to blue-800 */}
+        <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>
           Filter Assets
         </h2>
         <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
@@ -153,7 +152,8 @@ export default function Search() {
               id='city'
               value={sidebarData.city}
               onChange={handleChange}
-              className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
+              // Focus ring and border color changed to yellow-400
+              className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
             >
               <option value=''>All Cities</option>
               {prominentIndianCities.map(city => (
@@ -168,7 +168,8 @@ export default function Search() {
               id='type'
               value={sidebarData.type}
               onChange={handleChange}
-              className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
+              // Focus ring and border color changed to yellow-400
+              className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
             >
               <option value=''>All Types</option>
               {assetTypes.map(type => (
@@ -184,18 +185,20 @@ export default function Search() {
                 id='minCapacity'
                 type='number'
                 placeholder='Min'
-                value={sidebarData.minCapacity === undefined ? '' : sidebarData.minCapacity} // Displays empty if undefined
+                value={sidebarData.minCapacity === undefined ? '' : sidebarData.minCapacity}
                 onChange={handleChange}
-                className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
+                // Focus ring and border color changed to yellow-400
+                className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
               />
               <span className={`text-lg font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>-</span>
               <TextInput
                 id='maxCapacity'
                 type='number'
                 placeholder='Max'
-                value={sidebarData.maxCapacity === undefined ? '' : sidebarData.maxCapacity} // Displays empty if undefined
+                value={sidebarData.maxCapacity === undefined ? '' : sidebarData.maxCapacity}
                 onChange={handleChange}
-                className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
+                // Focus ring and border color changed to yellow-400
+                className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
               />
             </div>
           </div>
@@ -210,7 +213,8 @@ export default function Search() {
                     value={feature}
                     onChange={handleChange}
                     checked={sidebarData.features.includes(feature)}
-                    className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-blue-500 focus:ring-blue-500' : 'border-gray-300 text-blue-600 focus:ring-blue-500'}`}
+                    // Checkbox color changed to yellow-400
+                    className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-yellow-400 focus:ring-yellow-400' : 'border-gray-300 text-yellow-400 focus:ring-yellow-400'}`}
                   />
                   <Label htmlFor={`feature-${feature}`} className={`text-sm cursor-pointer ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                     {feature.replace(/_/g, ' ')}
@@ -230,7 +234,8 @@ export default function Search() {
                     value={amenity}
                     onChange={handleChange}
                     checked={sidebarData.amenities.includes(amenity)}
-                    className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-blue-500 focus:ring-blue-500' : 'border-gray-300 text-blue-600 focus:ring-blue-500'}`}
+                    // Checkbox color changed to yellow-400
+                    className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-yellow-400 focus:ring-yellow-400' : 'border-gray-300 text-yellow-400 focus:ring-yellow-400'}`}
                   />
                   <Label htmlFor={`amenity-${amenity}`} className={`text-sm cursor-pointer ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                     {amenity.replace(/_/g, ' ')}
@@ -240,15 +245,23 @@ export default function Search() {
             </div>
           </div>
 
-          <Button type='submit' gradientDuoTone='purpleToPink' className='w-full mt-4 py-2 text-lg font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300'>
+          {/* Replaced Flowbite Button with a native HTML button for "Apply Filters" */}
+          <button
+            type='submit'
+            className='w-full mt-4 py-2 text-lg font-semibold rounded-lg shadow-md 
+                       bg-yellow-400 text-white 
+                       hover:bg-yellow-500 hover:shadow-lg 
+                       transition-all duration-300'
+          >
             Apply Filters
-          </Button>
+          </button>
         </form>
       </div>
 
       <div className={`flex-1 p-6 md:p-8 ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-50'}`}>
         <div className='mb-8'>
-          <h1 className={`text-3xl md:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          {/* "Available Assets" heading changed to blue-800 */}
+          <h1 className={`text-3xl md:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>
             Available Assets {assets.length > 0 && <span className={`text-gray-500 ${theme === 'dark' ? 'text-gray-400' : ''}`}>({assets.length})</span>}
           </h1>
         </div>
@@ -256,7 +269,8 @@ export default function Search() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 justify-items-center items-stretch max-w-full mx-auto'>
           {loading ? (
             <div className='col-span-full flex flex-col justify-center items-center h-48'>
-              <svg className={`animate-spin h-10 w-10 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              {/* Spinner color changed to blue-600 for dark mode, blue-800 for light mode */}
+              <svg className={`animate-spin h-10 w-10 ${theme === 'dark' ? 'text-blue-600' : 'text-blue-800'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -268,9 +282,16 @@ export default function Search() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <p className={`mt-4 text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>No assets found matching your criteria.</p>
-              <Button onClick={() => navigate('/search')} className="mt-6" gradientDuoTone='purpleToPink'>
+              {/* Replaced Flowbite Button with a native HTML button for "Clear Filters" */}
+              <button
+                onClick={() => navigate('/search')}
+                className="mt-6 px-6 py-2 text-md font-semibold rounded-lg shadow-md
+                           bg-yellow-400 text-white
+                           hover:bg-yellow-500 hover:shadow-lg
+                           transition-all duration-300"
+              >
                 Clear Filters
-              </Button>
+              </button>
             </div>
           ) : (
             assets.map((asset) => (

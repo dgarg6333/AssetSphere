@@ -1,27 +1,28 @@
 import { Footer } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import {BsInstagram, BsTwitter, BsGithub } from 'react-icons/bs';
+import { BsInstagram, BsTwitter, BsGithub } from 'react-icons/bs';
+
 export default function FooterCom() {
   return (
-    <Footer container className='border border-t-8 border-blue-500'>
+    // Changed top border color to blue-800 for consistency
+    <Footer container className='border border-t-8 border-blue-800'>
       <div className='w-full max-w-7xl mx-auto'>
         <div className='grid w-full justify-between sm:flex md:grid-cols-1'>
           <div className='mt-5'>
-            <Link  to='/' className='self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white'  >
-              <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                Asset
+            <Link to='/' className='self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white'>
+              {/* ATI in yellow-400 */}
+              <span className='text-yellow-400'>
+                ATI
               </span>
-              Sphere
+              {/* CTI in blue-800 */}
+              <span className='text-blue-800'>
+                CTI
+              </span>
             </Link>
           </div>
           <div className='grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6'>
             <div>
-              <Footer.Title title='About Us' className='font-bold'/>
-              <div className='py-2'>Asset Sphere!</div> 
-              <div></div>
-            </div>
-            <div>
-              <Footer.Title title='Follow us' className='font-bold'/>
+              <Footer.Title title='Follow us' className='font-bold' />
               <Footer.LinkGroup col>
                 <Footer.Link
                   href='https://github.com/dgarg6333'
@@ -54,7 +55,7 @@ export default function FooterCom() {
               </Footer.LinkGroup>
             </div>
             <div>
-              <Footer.Title title='Legal' className='font-bold'/>
+              <Footer.Title title='Legal' className='font-bold' />
               <Footer.LinkGroup col>
                 <Footer.Link href='#'>Privacy Policy</Footer.Link>
                 <Footer.Link href='#'>Terms &amp; Conditions</Footer.Link>
@@ -70,9 +71,9 @@ export default function FooterCom() {
             year={new Date().getFullYear()}
           />
           <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
-            <Footer.Icon href='' icon={BsInstagram}/>
-            <Footer.Icon href='https://twitter.com/Deepans51432965?t=qF3zJY0F6nnB94FOEFp8-A&s=09' icon={BsTwitter}/>
-            <Footer.Icon href='https://github.com/dgarg6333' icon={BsGithub}/>
+            {/* Social icons styled with blue text and yellow hover */}
+            <Footer.Icon href='https://twitter.com/Deepans51432965?t=qF3zJY0F6nnB94FOEFp8-A&s=09' icon={BsTwitter} className='text-blue-800 hover:text-yellow-400 transition-colors duration-200' />
+            <Footer.Icon href='https://github.com/dgarg6333' icon={BsGithub} className='text-blue-800 hover:text-yellow-400 transition-colors duration-200' />
           </div>
         </div>
       </div>

@@ -1,7 +1,5 @@
-import { Alert, Button, FileInput, Select, TextInput, Label, Checkbox, Spinner, Textarea } from 'flowbite-react'; // Import Textarea
+import { Alert, FileInput, Select, TextInput, Label, Checkbox, Spinner, Textarea } from 'flowbite-react'; // Removed Button from import
 import { useState, useEffect } from 'react';
-// import ReactQuill from 'react-quill'; // REMOVE THIS LINE
-// import 'react-quill/dist/quill.snow.css'; // REMOVE THIS LINE
 import { getStorage, uploadBytesResumable, getDownloadURL, ref } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -347,11 +345,66 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.name}
                 className='mt-1'
+                // Apply custom focus styles for consistency
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
               <Label htmlFor='type' value='Asset Type' />
-              <Select id='type' onChange={handleChange} value={formData.type} className='mt-1'>
+              <Select
+                id='type'
+                onChange={handleChange}
+                value={formData.type}
+                className='mt-1'
+                theme={{
+                  "field": {
+                    "select": {
+                      "base": "block w-full",
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
+              >
                 {assetTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
@@ -367,6 +420,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.institutionName}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -380,6 +460,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.capacity}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
           </div>
@@ -401,6 +508,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.address.street}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -412,6 +546,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.address.buildingName}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -424,6 +585,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.address.locality}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -435,6 +623,33 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.address.landmark}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -445,6 +660,28 @@ export default function CreateAsset() {
                 onChange={handleChange}
                 value={formData.address.state}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "select": {
+                      "base": "block w-full",
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               >
                 <option value=''>Select State</option>
                 {indianStates.map(state => (
@@ -460,12 +697,32 @@ export default function CreateAsset() {
                   required
                   onChange={handleChange}
                   value={formData.address.city}
-                  // Disable city dropdown if state isn't selected or if district data is loading
                   disabled={!formData.address.state || loadingDistrictData}
                   className='mt-1'
+                  theme={{
+                    "field": {
+                      "select": {
+                        "base": "block w-full",
+                        "colors": {
+                          "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                        },
+                        "withIcon": {
+                          "on": "pr-10",
+                          "off": ""
+                        },
+                        "withAddon": {
+                          "on": "rounded-r-lg",
+                          "off": "rounded-lg"
+                        },
+                        "withShadow": {
+                          "on": "shadow-sm",
+                          "off": ""
+                        }
+                      }
+                    }
+                  }}
                 >
                   <option value=''>Select City</option>
-                  {/* Only show cities for the selected state */}
                   {formData.address.state && prominentIndianCitiesByState[formData.address.state] &&
                     prominentIndianCitiesByState[formData.address.state].map(city => (
                       <option key={city} value={city}>{city}</option>
@@ -474,7 +731,7 @@ export default function CreateAsset() {
                 </Select>
                 {loadingDistrictData && (
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <Spinner size="sm" /> {/* Show spinner when fetching district */}
+                    <Spinner size="sm" />
                   </div>
                 )}
               </div>
@@ -486,11 +743,38 @@ export default function CreateAsset() {
                 placeholder='Auto-filled from City'
                 required
                 id='address.district'
-                onChange={handleChange} // Allow manual override if needed
+                onChange={handleChange}
                 value={formData.address.district}
-                readOnly={!loadingDistrictData && formData.address.district !== ''} // Read-only once filled and not loading
-                disabled={loadingDistrictData} // Disable while loading
+                readOnly={!loadingDistrictData && formData.address.district !== ''}
+                disabled={loadingDistrictData}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -500,11 +784,38 @@ export default function CreateAsset() {
                 placeholder='e.g., 110001 (6 digits)'
                 required
                 id='address.pincode'
-                pattern='[0-9]{6}' // Enforce 6-digit number
+                pattern='[0-9]{6}'
                 title='Pincode must be 6 digits'
                 onChange={handleChange}
                 value={formData.address.pincode}
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
           </div>
@@ -525,8 +836,35 @@ export default function CreateAsset() {
                 id='coordinates.latitude'
                 onChange={handleChange}
                 value={formData.address.coordinates.latitude}
-                step='any' // Allows decimal numbers
+                step='any'
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
             <div>
@@ -538,8 +876,35 @@ export default function CreateAsset() {
                 id='coordinates.longitude'
                 onChange={handleChange}
                 value={formData.address.coordinates.longitude}
-                step='any' // Allows decimal numbers
+                step='any'
                 className='mt-1'
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
               />
             </div>
           </div>
@@ -558,6 +923,15 @@ export default function CreateAsset() {
                   value={feature}
                   onChange={handleChange}
                   checked={formData.features.includes(feature)}
+                  // Apply custom focus styles for consistency
+                  theme={{
+                    "root": {
+                      "base": "h-4 w-4 rounded border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-yellow-400 dark:checked:bg-yellow-400",
+                      "color": {
+                        "default": "text-yellow-400"
+                      }
+                    }
+                  }}
                 />
                 <Label htmlFor='features' className='text-sm capitalize cursor-pointer dark:text-gray-300'>
                   {feature.replace(/_/g, ' ').toLowerCase()}
@@ -580,6 +954,15 @@ export default function CreateAsset() {
                   value={amenity}
                   onChange={handleChange}
                   checked={formData.amenities.includes(amenity)}
+                  // Apply custom focus styles for consistency
+                  theme={{
+                    "root": {
+                      "base": "h-4 w-4 rounded border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-yellow-400 dark:checked:bg-yellow-400",
+                      "color": {
+                        "default": "text-yellow-400"
+                      }
+                    }
+                  }}
                 />
                 <Label htmlFor='amenities' className='text-sm capitalize cursor-pointer dark:text-gray-300'>
                   {amenity.replace(/_/g, ' ').toLowerCase()}
@@ -594,33 +977,63 @@ export default function CreateAsset() {
           <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
             Asset Image
           </h2>
-          <div className='flex flex-col sm:flex-row gap-4 items-center border-4 border-teal-500 border-dotted p-3 rounded-lg'>
+          {/* Changed border color for consistency */}
+          <div className='flex flex-col sm:flex-row gap-4 items-center border-4 border-yellow-400 border-dotted p-3 rounded-lg'>
             <FileInput
               type='file'
               accept='image/*'
               onChange={(e) => setFile(e.target.files[0])}
               className='flex-1'
+              theme={{
+                "field": {
+                  "input": {
+                    "base": "block w-full cursor-pointer rounded-lg border disabled:cursor-not-allowed disabled:opacity-50",
+                    "colors": {
+                      "default": "border-gray-300 bg-gray-50 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                    }
+                  }
+                }
+              }}
             />
-            <Button
+            {/* Replaced Flowbite Button with a native HTML button */}
+            <button
               type='button'
-              gradientDuoTone='purpleToBlue'
-              size='sm'
-              outline
               onClick={handleUploadImage}
               disabled={imageUploadProgress !== null || !file}
-              className='min-w-[120px]'
+              className='min-w-[120px] py-2 px-4 rounded-lg
+                         bg-yellow-400 text-white font-semibold
+                         hover:bg-yellow-500
+                         transition-colors duration-200
+                         disabled:opacity-50 disabled:cursor-not-allowed'
             >
               {imageUploadProgress ? (
-                <div className='w-16 h-16'>
+                <div className='w-16 h-16 mx-auto'> {/* Centering spinner */}
                   <CircularProgressbar
                     value={imageUploadProgress}
                     text={`${imageUploadProgress || 0}%`}
+                    styles={{
+                      root: {},
+                      path: {
+                        stroke: `rgb(37, 99, 235, ${imageUploadProgress / 100})`, // Blue color from original buttons
+                      },
+                      trail: {
+                        stroke: '#d6d6d6',
+                      },
+                      text: {
+                        fill: 'currentColor', // Use current text color
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                      },
+                      background: {
+                        fill: '#3e98c7',
+                      },
+                    }}
                   />
                 </div>
               ) : (
                 'Upload Image'
               )}
-            </Button>
+            </button>
           </div>
           {imageUploadError && <Alert color='failure' className='mt-4'>{imageUploadError}</Alert>}
           {/* Display the uploaded image or the default placeholder */}
@@ -638,24 +1051,60 @@ export default function CreateAsset() {
           )}
         </div>
 
+        {/* Description */}
         <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
           <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
             Description
           </h2>
-          <Textarea // Replaced ReactQuill with Flowbite's Textarea
+          <Textarea
             placeholder='Write a detailed description for the asset...'
             required
             id='description'
-            onChange={handleChange} // Use the generic handleChange
+            onChange={handleChange}
             value={formData.description}
             rows={8}
             className='min-h-[150px] mt-1'
+            theme={{
+              "field": {
+                "input": {
+                  "base": "block w-full",
+                  "sizes": {
+                    "sm": "p-2 sm:text-xs",
+                    "md": "p-2.5 text-sm",
+                    "lg": "p-4 sm:text-base"
+                  },
+                  "colors": {
+                    "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                  },
+                  "withIcon": {
+                    "on": "pr-10",
+                    "off": ""
+                  },
+                  "withAddon": {
+                    "on": "rounded-r-lg",
+                    "off": "rounded-lg"
+                  },
+                  "withShadow": {
+                    "on": "shadow-sm",
+                    "off": ""
+                  }
+                }
+              }
+            }}
           />
         </div>
 
-        <Button type='submit' gradientDuoTone='purpleToPink' className='w-full py-2 text-lg'>
+        {/* Replaced Flowbite Button with a native HTML button */}
+        <button
+          type='submit'
+          className='w-full py-2 rounded-lg
+                     bg-blue-800 text-white text-lg font-semibold
+                     hover:bg-blue-900
+                     transition-colors duration-200
+                     disabled:opacity-50 disabled:cursor-not-allowed'
+        >
           Register Asset
-        </Button>
+        </button>
         {publishError && <Alert className='mt-5' color='failure'>{publishError}</Alert>}
       </form>
     </div>

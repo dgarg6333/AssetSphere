@@ -58,11 +58,10 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
 
       const data = await res.json();
       if (!res.ok) {
-        // If the response is not OK, use the error message from the API, or a generic one
         throw new Error(data.message || data.error || 'Failed to create booking.');
       }
-      
-      setSuccess(data.message || 'Booking created successfully!'); // Display success message from API or default
+
+      setSuccess(data.message || 'Booking created successfully!');
       
       // Clear form fields after successful booking
       setStartDate('');
@@ -71,14 +70,14 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
       setAttendeeCount('');
       setSpecialRequests('');
 
-      // *** MODIFIED: Close the modal after a short delay to allow success message to be seen ***
+      // Close the modal after a short delay to allow success message to be seen
       setTimeout(() => {
-        onClose(); 
+        onClose();
         setSuccess(''); // Clear success message when modal closes
       }, 1500); // Close after 1.5 seconds
 
     } catch (err) {
-      setError(err.message); // Display the error message
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -107,7 +106,8 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
               <input
                 type="date"
                 id="startDate"
-                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+                // Changed focus ring and border color to yellow-400 for consistency
+                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-yellow-400 focus:border-yellow-400`}
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 required
@@ -118,7 +118,8 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
               <input
                 type="date"
                 id="endDate"
-                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+                // Changed focus ring and border color to yellow-400 for consistency
+                className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-yellow-400 focus:border-yellow-400`}
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 required
@@ -131,7 +132,8 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
             <input
               type="text"
               id="purpose"
-              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              // Changed focus ring and border color to yellow-400 for consistency
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-yellow-400 focus:border-yellow-400`}
               placeholder="e.g., Team meeting, Workshop"
               value={purpose}
               onChange={(e) => setPurpose(e.target.value)}
@@ -143,7 +145,8 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
             <input
               type="number"
               id="attendeeCount"
-              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              // Changed focus ring and border color to yellow-400 for consistency
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-yellow-400 focus:border-yellow-400`}
               placeholder="e.g., 10"
               min="1"
               value={attendeeCount}
@@ -156,14 +159,14 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
             <textarea
               id="specialRequests"
               rows="3"
-              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-blue-500 focus:border-blue-500`}
+              // Changed focus ring and border color to yellow-400 for consistency
+              className={`w-full p-3 rounded-md border ${inputBorder} ${inputBg} ${textColor} focus:ring focus:ring-yellow-400 focus:border-yellow-400`}
               placeholder="Any specific needs like projector, catering, etc."
               value={specialRequests}
               onChange={(e) => setSpecialRequests(e.target.value)}
             ></textarea>
           </div>
 
-          {/* MODIFIED: Display error/success messages */}
           {error && <p className={`${errorColor} text-sm mt-2`}>{error}</p>}
           {success && <p className={`${successColor} text-sm mt-2`}>{success}</p>}
 
@@ -171,7 +174,7 @@ function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
             type="submit"
             className={`
               w-full py-3 rounded-lg text-lg font-semibold text-white
-              bg-gradient-to-r from-purple-600 to-pink-600
+              bg-yellow-400 hover:bg-yellow-500 // Changed from gradient to solid yellow
               shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
               transform hover:scale-105 active:scale-100
               ${loading ? 'opacity-70 cursor-not-allowed' : ''}
@@ -242,7 +245,7 @@ export default function AssetDetail() {
   // Corrected Image fallback logic:
   const displayImage = asset?.image && asset.image !== ''
     ? asset.image
-    : 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753370322944-premium_photo-1679547202918-bf37285d3caf.avif?alt=media&token=ae868477-bdf6-4cf0-8cd4-87bda8c27421'; // Changed to a generic placeholder for better context
+    : 'https://firebasestorage.googleapis.com/v0/b/mern-blog-5bc38.appspot.com/o/1753370322944-premium_photo-1679547202918-bf37285d3caf.avif?alt=media&token=ae868477-bdf6-4cf0-8cd4-87bda8c27421';
 
   const handleBookNow = () => {
     setIsBookingModalOpen(true); // Open the modal
@@ -276,7 +279,7 @@ export default function AssetDetail() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className={`flex items-center ${subTextColor}`}>
-              <FaMapMarkerAlt className="mr-3 text-xl text-blue-500" />
+              <FaMapMarkerAlt className="mr-3 text-xl text-red-500" />
               <p className="text-lg">{getFullAddress(asset.address)}</p>
             </div>
             <div className={`flex items-center ${subTextColor}`}>
@@ -288,7 +291,7 @@ export default function AssetDetail() {
               <p className="text-lg"><strong>Type:</strong> {asset.type}</p>
             </div>
             <div className={`flex items-center ${subTextColor}`}>
-              <FaUsers className="mr-3 text-xl text-teal-500" />
+              <FaUsers className="mr-3 text-xl text-blue-700" />
               <p className="text-lg"><strong>Capacity:</strong> {asset.capacity} people</p>
             </div>
           </div>
@@ -338,8 +341,7 @@ export default function AssetDetail() {
             </div>
           )}
 
-          {/* --- Owner Details Section --- */}
-          {/* Only show if ownerId exists and has an email */}
+          {/* Owner Details Section */}
           {asset.ownerId && asset.ownerId.email && (
             <div className="pt-6">
               <h3 className={`text-2xl font-bold mb-3 ${headingColor}`}>Owner Email</h3>
@@ -354,10 +356,10 @@ export default function AssetDetail() {
           
           <div className="pt-6">
             <button
-              // onClick={handleBookNow}
+              onClick={handleBookNow} // Uncommented onClick to open the modal
               className={`
                 w-full flex items-center justify-center py-3 rounded-lg text-xl font-bold text-white
-                bg-gradient-to-r from-purple-600 to-pink-600
+                bg-yellow-400 hover:bg-yellow-500 // Changed from gradient to solid yellow
                 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
                 transform hover:scale-105 active:scale-100
               `}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Button } from 'flowbite-react';
+// Removed Button from flowbite-react as we'll use native button
+// import { Button } from 'flowbite-react';
 import { HiArrowRight } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 
@@ -7,28 +8,30 @@ export default function Home() {
   const { theme } = useSelector((state) => state.theme);
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-gray-950 text-white' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-gray-950 text-white' : 'bg-orange-50'}`}>
       {/* Hero Section */}
       <div className='relative overflow-hidden py-24 md:py-32'>
-        {/* Subtle background gradient for a cleaner look */}
-        <div className={`absolute inset-0 z-0 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-50 to-indigo-100'}`}></div>
+        {/* Subtle background gradient for a cleaner look, inspired by the image's warm backdrop */}
+        <div className={`absolute inset-0 z-0 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-orange-100 to-orange-200'}`}></div>
 
         <div className='relative z-10 flex flex-col gap-6 p-4 px-3 max-w-6xl mx-auto text-center md:text-left'>
-          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-md ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Asset Sphere</span>
+          {/* Welcome line: Entirely blue as per the last specific request */}
+          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-md text-blue-800`}>
+            Welcome to ATI CTI
           </h1>
           <p className={`text-lg sm:text-xl leading-relaxed max-w-4xl mx-auto md:mx-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Your ultimate platform to seamlessly discover, register, and book valuable institutional assets. Optimize resource utilization across government departments and ministries.
           </p>
           <div className="flex justify-center md:justify-start mt-4">
             <Link to='/search'>
-              <Button
-                gradientDuoTone='purpleToPink'
-                className='px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105'
+              <button
+                // Added 'flex', 'items-center', 'justify-center', and 'gap-3' for alignment.
+                // Wrapped text in a span with 'whitespace-nowrap' to keep it on one line.
+                className='px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 bg-yellow-400 hover:bg-yellow-500 text-white flex items-center justify-center gap-3'
               >
-                View All Available Assets & Book
-                <HiArrowRight className='ml-3 h-5 w-5' />
-              </Button>
+                <span className="whitespace-nowrap">View All Available Assets & Book</span>
+                <HiArrowRight className='h-5 w-5' />
+              </button>
             </Link>
           </div>
         </div>
@@ -39,7 +42,8 @@ export default function Home() {
         <div className='max-w-6xl mx-auto px-4'>
           <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 relative pb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
             Key Features
-            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-purple-500' : 'bg-indigo-500'}`}></span>
+            {/* Underline: Blue accent color */}
+            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-yellow-400' : 'bg-blue-800'}`}></span>
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
             <FeatureCard
@@ -65,11 +69,12 @@ export default function Home() {
       </div>
 
       {/* Asset Types Section */}
-      <div className={`py-16 ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'}`}>
+      <div className={`py-16 ${theme === 'dark' ? 'bg-gray-950' : 'bg-orange-50'}`}> {/* Subtle background change */}
         <div className='max-w-6xl mx-auto px-4'>
           <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 relative pb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
             Explore Our Asset Types
-            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-pink-500' : 'bg-teal-500'}`}></span>
+            {/* Underline: Yellow accent color */}
+            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-blue-800' : 'bg-yellow-400'}`}></span>
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
             <AssetTypeCard theme={theme} type="Hall" description="Spacious venues for conferences, seminars, and large gatherings." icon="https://placehold.co/100x100/F59E0B/FFFFFF/svg?text=HALL" />
@@ -85,7 +90,8 @@ export default function Home() {
         <div className='max-w-6xl mx-auto px-4'>
           <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 relative pb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
             Essential Amenities
-            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-green-500' : 'bg-orange-500'}`}></span>
+            {/* Underline: Blue accent color */}
+            <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full ${theme === 'dark' ? 'bg-yellow-400' : 'bg-blue-800'}`}></span>
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             <AmenityCard theme={theme} amenity="PARKING" description="Ample and secure parking space for all visitors." icon="https://placehold.co/100x100/8B5CF6/FFFFFF/svg?text=PARK" />

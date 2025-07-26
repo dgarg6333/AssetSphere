@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaUsers, FaMapMarkerAlt } from 'react-icons/fa'; // Added FaMapMarkerAlt for location icon
+import { FaUsers, FaMapMarkerAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 export default function AssetCard({ asset }) {
@@ -36,8 +36,8 @@ export default function AssetCard({ asset }) {
       </div>
 
       {/* Details */}
-      <div className="p-4 space-y-3"> {/* Increased space-y for slightly more breathing room */}
-        <h3 className="text-xl font-bold truncate">{asset.name || 'Unnamed Asset'}</h3> {/* Slightly larger font for name */}
+      <div className="p-4 space-y-3">
+        <h3 className="text-xl font-bold truncate">{asset.name || 'Unnamed Asset'}</h3>
 
         {/* Description */}
         {asset.description && (
@@ -47,25 +47,27 @@ export default function AssetCard({ asset }) {
         {/* Capacity and Location */}
         <div className={`flex items-center justify-between text-sm ${capacityLocationColor}`}>
           <div className="flex items-center">
-            <FaUsers className="mr-2 text-blue-500 text-lg" /> {/* Slightly larger icon */}
+            {/* FaUsers icon color set to text-blue-700 as requested */}
+            <FaUsers className="mr-2 text-blue-700 text-lg" />
             <span>{asset.capacity || 'N/A'} people</span>
           </div>
           <div className="flex items-center text-right">
             {asset.address?.city && (
               <>
-                <FaMapMarkerAlt className="mr-1 text-red-500 text-md" /> {/* Location icon */}
-                <span className="text-sm">{asset.address.city}</span> {/* Consistent text size */}
+                {/* FaMapMarkerAlt icon color set to text-red-500 as requested */}
+                <FaMapMarkerAlt className="mr-1 text-red-500 text-md" />
+                <span className="text-sm">{asset.address.city}</span>
               </>
             )}
           </div>
         </div>
 
-        {/* View Button - Updated Style */}
+        {/* View Button */}
         <Link
           to={`/asset/${asset._id}`}
           className={`
             block mt-4 text-center py-2.5 rounded-md text-white font-semibold
-            bg-gradient-to-r from-purple-600 to-pink-600
+            bg-yellow-400 hover:bg-yellow-500
             shadow-md hover:shadow-lg transition-all duration-300 ease-in-out
             transform hover:scale-105 active:scale-100
           `}

@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {TextInput , Button,Alert, Modal} from 'flowbite-react';
+import {TextInput , Alert, Modal} from 'flowbite-react';
 import { useState, useRef, useEffect } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 import { app } from '../firebase';
@@ -181,9 +181,9 @@ export default function DashProfile() {
                   left: 0,
                 },
                 path: {
-                  stroke: `rgba(62, 152, 199, ${
+                  stroke: `rgba(30, 58, 138, ${ // Updated to blue-800 for consistent theme
                     imageFileUploadProgress / 100
-                  })`,
+                  })`, 
                 },
               }}
             />
@@ -218,20 +218,30 @@ export default function DashProfile() {
           placeholder='password'
           onChange={handleChange}
         />
-        <Button  type='submit'  gradientDuoTone='purpleToBlue'  outline disabled={loading || imageFileUploading} >
-          {loading ? 'Loading...' : 'Update'}
-        </Button> 
-        {(
-          <Link to={'/create-asset'}>
-            <Button
+        <button 
+          type='submit' 
+          className='w-full py-2 rounded-lg 
+                     bg-blue-800 text-white font-semibold 
+                     hover:bg-blue-900 
+                     transition-colors duration-200 
+                     disabled:opacity-50 disabled:cursor-not-allowed'
+          disabled={loading || imageFileUploading} 
+        >
+          {loading ? 'Loading...' : 'Update Profile'}
+        </button> 
+        {/* Removed conditional rendering for the Register an Asset button */}
+        <Link to={'/create-asset'}>
+            <button
               type='button'
-              gradientDuoTone='purpleToPink'
-              className='w-full'
+              className='w-full py-2 rounded-lg 
+                         bg-blue-800 text-white font-semibold 
+                         hover:bg-blue-900 
+                         transition-colors duration-200'
             >
-              Register a Asset
-            </Button>
+              Register an Asset
+            </button>
           </Link>
-        )}
+
       </form>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
@@ -252,7 +262,7 @@ export default function DashProfile() {
           {error}
         </Alert>
       )}
-      <Modal  show={showModal}  onClose={() => setShowModal(false)}  popup  size='md'>
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
         <Modal.Header />
         <Modal.Body>
           <div className='text-center'>
@@ -261,12 +271,12 @@ export default function DashProfile() {
               Are you sure you want to delete your account?
             </h3>
             <div className='flex justify-center gap-4'>
-              <Button color='failure' onClick={handleDeleteUser}>
+              <button className='py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700' onClick={handleDeleteUser}>
                 Yes, I'm sure
-              </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
+              </button>
+              <button className='py-2 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300' onClick={() => setShowModal(false)}>
                 No, cancel
-              </Button>
+              </button>
             </div>
           </div>
         </Modal.Body>
