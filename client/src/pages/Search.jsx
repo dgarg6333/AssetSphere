@@ -1,4 +1,4 @@
-import { Select, TextInput, Label, Checkbox } from 'flowbite-react'; // Removed Button from import
+import { Select, TextInput, Label, Checkbox } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AssetCard from '../components/AssetCard';
@@ -8,10 +8,12 @@ export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     city: '',
     type: '',
-    minCapacity: undefined, // Initialized to undefined
-    maxCapacity: undefined, // Initialized to undefined
+    minCapacity: undefined,
+    maxCapacity: undefined,
     features: [],
-    amenities: []
+    amenities: [],
+    startDate: '', // New state for start date
+    endDate: '',   // New state for end date
   });
 
   const [assets, setAssets] = useState([]);
@@ -50,7 +52,7 @@ export default function Search() {
     'Guwahati', 'Gwalior', 'Howrah', 'Hubli-Dharwad', 'Hyderabad', 'Imphal',
     'Indore', 'Jabalpur', 'Jaipur', 'Jalandhar', 'Jammu', 'Jamnagar', 'Jamshedpur',
     'Jhansi', 'Jodhpur', 'Kanpur', 'Kochi', 'Kolkata', 'Kota', 'Kozhikode',
-    'Lucknow', 'Ludhiana', 'Madurai', 'Malappuram', 'Mangalore', 'Meerut',
+    'Lucknow', 'Ludhiana', 'Madurai', 'Malappapuram', 'Mangalore', 'Meerut',
     'Moradabad', 'Mumbai', 'Mysore', 'Nagpur', 'Nanded', 'Nashik', 'Nellore',
     'Noida', 'Panaji', 'Patna', 'Puducherry', 'Pune', 'Raipur', 'Rajkot',
     'Ranchi', 'Salem', 'Solapur', 'Srinagar', 'Surat', 'Thane', 'Thiruvananthapuram',
@@ -74,6 +76,8 @@ export default function Search() {
     const amenitiesFromUrl = urlParams.get('amenities')?.split(',').filter(Boolean) || [];
     const minCapacityFromUrl = urlParams.get('minCapacity');
     const maxCapacityFromUrl = urlParams.get('maxCapacity');
+    const startDateFromUrl = urlParams.get('startDate');
+    const endDateFromUrl = urlParams.get('endDate');
 
     setSidebarData({
       city: cityFromUrl || '',
@@ -81,7 +85,9 @@ export default function Search() {
       features: featuresFromUrl,
       amenities: amenitiesFromUrl,
       minCapacity: minCapacityFromUrl ? parseInt(minCapacityFromUrl) : undefined,
-      maxCapacity: maxCapacityFromUrl ? parseInt(maxCapacityFromUrl) : undefined
+      maxCapacity: maxCapacityFromUrl ? parseInt(maxCapacityFromUrl) : undefined,
+      startDate: startDateFromUrl || '',
+      endDate: endDateFromUrl || '',
     });
 
     fetchAssets();
@@ -140,7 +146,6 @@ export default function Search() {
       <div className={`md:w-72 p-6 md:p-8 border-b md:border-r md:border-b-0 shadow-lg md:shadow-xl transition-all duration-300
         ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}
       `}>
-        {/* Filter Assets heading changed to blue-800 */}
         <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>
           Filter Assets
         </h2>
@@ -152,7 +157,6 @@ export default function Search() {
               id='city'
               value={sidebarData.city}
               onChange={handleChange}
-              // Focus ring and border color changed to yellow-400
               className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
             >
               <option value=''>All Cities</option>
@@ -168,7 +172,6 @@ export default function Search() {
               id='type'
               value={sidebarData.type}
               onChange={handleChange}
-              // Focus ring and border color changed to yellow-400
               className={`rounded-lg ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
             >
               <option value=''>All Types</option>
@@ -187,7 +190,6 @@ export default function Search() {
                 placeholder='Min'
                 value={sidebarData.minCapacity === undefined ? '' : sidebarData.minCapacity}
                 onChange={handleChange}
-                // Focus ring and border color changed to yellow-400
                 className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
               />
               <span className={`text-lg font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>-</span>
@@ -197,9 +199,35 @@ export default function Search() {
                 placeholder='Max'
                 value={sidebarData.maxCapacity === undefined ? '' : sidebarData.maxCapacity}
                 onChange={handleChange}
-                // Focus ring and border color changed to yellow-400
                 className={`w-full ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
               />
+            </div>
+          </div>
+
+          {/* New two-row layout for Dates */}
+          <div className='flex flex-col gap-2'>
+            <Label value='Dates' className={`text-base font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`} />
+            <div className='flex flex-col gap-2'> {/* This div creates the vertical stacking */}
+              <div className='flex items-center gap-2'> {/* Container for "Start" and its input */}
+                <Label htmlFor='startDate' value='Start:' className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} w-1/4`} />
+                <TextInput
+                  id='startDate'
+                  type='date'
+                  value={sidebarData.startDate}
+                  onChange={handleChange}
+                  className={`w-3/4 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
+                />
+              </div>
+              <div className='flex items-center gap-2'> {/* Container for "End" and its input */}
+                <Label htmlFor='endDate' value='End:' className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} w-1/4`} />
+                <TextInput
+                  id='endDate'
+                  type='date'
+                  value={sidebarData.endDate}
+                  onChange={handleChange}
+                  className={`w-3/4 ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-yellow-400 focus:border-yellow-400' : 'border-gray-300 focus:ring-yellow-400 focus:border-yellow-400'}`}
+                />
+              </div>
             </div>
           </div>
 
@@ -213,7 +241,6 @@ export default function Search() {
                     value={feature}
                     onChange={handleChange}
                     checked={sidebarData.features.includes(feature)}
-                    // Checkbox color changed to yellow-400
                     className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-yellow-400 focus:ring-yellow-400' : 'border-gray-300 text-yellow-400 focus:ring-yellow-400'}`}
                   />
                   <Label htmlFor={`feature-${feature}`} className={`text-sm cursor-pointer ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -234,7 +261,6 @@ export default function Search() {
                     value={amenity}
                     onChange={handleChange}
                     checked={sidebarData.amenities.includes(amenity)}
-                    // Checkbox color changed to yellow-400
                     className={`rounded ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-yellow-400 focus:ring-yellow-400' : 'border-gray-300 text-yellow-400 focus:ring-yellow-400'}`}
                   />
                   <Label htmlFor={`amenity-${amenity}`} className={`text-sm cursor-pointer ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -245,13 +271,12 @@ export default function Search() {
             </div>
           </div>
 
-          {/* Replaced Flowbite Button with a native HTML button for "Apply Filters" */}
           <button
             type='submit'
-            className='w-full mt-4 py-2 text-lg font-semibold rounded-lg shadow-md 
-                       bg-yellow-400 text-white 
-                       hover:bg-yellow-500 hover:shadow-lg 
-                       transition-all duration-300'
+            className='w-full mt-4 py-2 text-lg font-semibold rounded-lg shadow-md
+                         bg-yellow-400 text-white
+                         hover:bg-yellow-500 hover:shadow-lg
+                         transition-all duration-300'
           >
             Apply Filters
           </button>
@@ -260,7 +285,6 @@ export default function Search() {
 
       <div className={`flex-1 p-6 md:p-8 ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-50'}`}>
         <div className='mb-8'>
-          {/* "Available Assets" heading changed to blue-800 */}
           <h1 className={`text-3xl md:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-blue-800'}`}>
             Available Assets {assets.length > 0 && <span className={`text-gray-500 ${theme === 'dark' ? 'text-gray-400' : ''}`}>({assets.length})</span>}
           </h1>
@@ -269,7 +293,6 @@ export default function Search() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 justify-items-center items-stretch max-w-full mx-auto'>
           {loading ? (
             <div className='col-span-full flex flex-col justify-center items-center h-48'>
-              {/* Spinner color changed to blue-600 for dark mode, blue-800 for light mode */}
               <svg className={`animate-spin h-10 w-10 ${theme === 'dark' ? 'text-blue-600' : 'text-blue-800'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -282,13 +305,12 @@ export default function Search() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <p className={`mt-4 text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>No assets found matching your criteria.</p>
-              {/* Replaced Flowbite Button with a native HTML button for "Clear Filters" */}
               <button
                 onClick={() => navigate('/search')}
                 className="mt-6 px-6 py-2 text-md font-semibold rounded-lg shadow-md
-                           bg-yellow-400 text-white
-                           hover:bg-yellow-500 hover:shadow-lg
-                           transition-all duration-300"
+                               bg-yellow-400 text-white
+                               hover:bg-yellow-500 hover:shadow-lg
+                               transition-all duration-300"
               >
                 Clear Filters
               </button>

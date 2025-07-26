@@ -12,10 +12,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState('');
   useEffect(() => {
@@ -35,6 +37,7 @@ export default function DashSidebar() {
         console.log(data.message);
       } else {
         dispatch(signoutSuccess());
+        navigate('/');
       }
     } catch (error) {
       console.log(error.message);

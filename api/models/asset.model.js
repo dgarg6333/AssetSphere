@@ -39,10 +39,6 @@ const assetSchema = new mongoose.Schema(
         required: true,
         trim: true,
         match: /^[0-9]{6}$/
-      },
-      coordinates: {
-        latitude: { type: Number, required: true, min: -90, max: 90 },
-        longitude: { type: Number, required: true, min: -180, max: 180 }
       }
     },
     capacity: {

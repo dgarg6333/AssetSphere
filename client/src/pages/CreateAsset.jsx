@@ -96,10 +96,6 @@ export default function CreateAsset() {
       district: '', // This will be auto-filled
       state: '',
       pincode: '', // This will be manually added
-      coordinates: {
-        latitude: '',
-        longitude: ''
-      }
     },
     capacity: 1,
     features: [],
@@ -187,7 +183,7 @@ export default function CreateAsset() {
 
   /**
    * Handles changes for all input types (TextInput, Select, Checkbox, Textarea).
-   * It intelligently updates the formData state, including nested address and coordinates.
+   * It intelligently updates the formData state, including nested address.
    * Special handling for state and city changes to trigger district fetching.
    * @param {Event} e - The DOM event object.
    */
@@ -219,19 +215,7 @@ export default function CreateAsset() {
           address: updatedAddress
         };
       });
-    } else if (id.startsWith('coordinates.')) {
-      const coordField = id.split('.')[1];
-      setFormData(prev => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          coordinates: {
-            ...prev.address.coordinates,
-            [coordField]: parseFloat(value) || '' // Convert to number, or empty string if invalid
-          }
-        }
-      }));
-    } else if (id === 'features' || id === 'amenities') {
+    }else if (id === 'features' || id === 'amenities') {
       let updatedList = checked
         ? [...formData[id], value]
         : formData[id].filter((item) => item !== value);
@@ -290,13 +274,6 @@ export default function CreateAsset() {
       const dataToSend = {
         ...formData,
         capacity: parseInt(formData.capacity) || 1,
-        address: {
-          ...formData.address,
-          coordinates: {
-            latitude: parseFloat(formData.address.coordinates.latitude) || 0,
-            longitude: parseFloat(formData.address.coordinates.longitude) || 0
-          }
-        }
         // No change needed for 'image' here as it's already a string in formData
       };
 
@@ -788,95 +765,6 @@ export default function CreateAsset() {
                 title='Pincode must be 6 digits'
                 onChange={handleChange}
                 value={formData.address.pincode}
-                className='mt-1'
-                theme={{
-                  "field": {
-                    "input": {
-                      "base": "block w-full",
-                      "sizes": {
-                        "sm": "p-2 sm:text-xs",
-                        "md": "p-2.5 text-sm",
-                        "lg": "p-4 sm:text-base"
-                      },
-                      "colors": {
-                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
-                      },
-                      "withIcon": {
-                        "on": "pr-10",
-                        "off": ""
-                      },
-                      "withAddon": {
-                        "on": "rounded-r-lg",
-                        "off": "rounded-lg"
-                      },
-                      "withShadow": {
-                        "on": "shadow-sm",
-                        "off": ""
-                      }
-                    }
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Coordinates */}
-        <div className='p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700'>
-          <h2 className='text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200'>
-            Geographical Coordinates
-          </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div>
-              <Label htmlFor='coordinates.latitude' value='Latitude' />
-              <TextInput
-                type='number'
-                placeholder='e.g., 28.6139'
-                required
-                id='coordinates.latitude'
-                onChange={handleChange}
-                value={formData.address.coordinates.latitude}
-                step='any'
-                className='mt-1'
-                theme={{
-                  "field": {
-                    "input": {
-                      "base": "block w-full",
-                      "sizes": {
-                        "sm": "p-2 sm:text-xs",
-                        "md": "p-2.5 text-sm",
-                        "lg": "p-4 sm:text-base"
-                      },
-                      "colors": {
-                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
-                      },
-                      "withIcon": {
-                        "on": "pr-10",
-                        "off": ""
-                      },
-                      "withAddon": {
-                        "on": "rounded-r-lg",
-                        "off": "rounded-lg"
-                      },
-                      "withShadow": {
-                        "on": "shadow-sm",
-                        "off": ""
-                      }
-                    }
-                  }
-                }}
-              />
-            </div>
-            <div>
-              <Label htmlFor='coordinates.longitude' value='Longitude' />
-              <TextInput
-                type='number'
-                placeholder='e.g., 77.2090'
-                required
-                id='coordinates.longitude'
-                onChange={handleChange}
-                value={formData.address.coordinates.longitude}
-                step='any'
                 className='mt-1'
                 theme={{
                   "field": {

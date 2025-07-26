@@ -16,6 +16,7 @@ import {
 } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashProfile() {
   const {currentUser, error, loading } = useSelector(state=>state.user);
@@ -30,6 +31,7 @@ export default function DashProfile() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const filePickerRef = useRef();
+  const navigate = useNavigate();
   const handleImageChange =(e)=>{
     const file = e.target.files[0];
     if (file) {
@@ -137,6 +139,7 @@ export default function DashProfile() {
         dispatch(deleteUserFailure(data.message));
       } else {
         dispatch(deleteUserSuccess(data));
+        navigate('/');
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
@@ -153,6 +156,7 @@ export default function DashProfile() {
         console.log(data.message);
       } else {
         dispatch(signoutSuccess());
+        navigate('/');
       }
     } catch (error) {
       console.log(error.message);

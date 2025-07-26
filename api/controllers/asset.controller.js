@@ -1,4 +1,5 @@
 import Asset from '../models/asset.model.js';
+import Booking from '../models/booking.model.js';
 
 export const addAsset = async (req, res, next) => {
     try {
@@ -22,48 +23,83 @@ export const getAsset = async (req, res, next) => {
             minCapacity,
             maxCapacity,
             amenities,
-            features
+            features,
+            startDate, // New query parameter
+            endDate    // New query parameter
         } = req.query;
 
-        // Build simple filter
-        let filter = { status: 'AVAILABLE' };
+        // Build simple filter for Asset model
+        let assetFilter = { status: 'AVAILABLE' };
 
-        // Filter by city only
+        // Filter by city
         if (city) {
-            filter['address.city'] = { $regex: city, $options: 'i' };
+            assetFilter['address.city'] = { $regex: city, $options: 'i' };
         }
 
+        // Filter by type
         if (type) {
-            filter.type = { $regex: type, $options: 'i' }; // Added filter for type
+            assetFilter.type = { $regex: type, $options: 'i' };
         }
 
         // Filter by capacity range
         if (minCapacity) {
-            filter.capacity = { $gte: parseInt(minCapacity) };
+            assetFilter.capacity = { $gte: parseInt(minCapacity) };
         }
         if (maxCapacity) {
-            filter.capacity = { ...filter.capacity, $lte: parseInt(maxCapacity) };
+            // Ensure capacity filter is an object before adding $lte
+            assetFilter.capacity = { ...(assetFilter.capacity || {}), $lte: parseInt(maxCapacity) };
         }
 
         // Filter by amenities
         if (amenities) {
-            const amenitiesArray = amenities.split(',');
-            filter.amenities = { $in: amenitiesArray };
+            const amenitiesArray = amenities.split(',').map(item => item.trim());
+            assetFilter.amenities = { $in: amenitiesArray };
         }
 
-        if(features){
-            const featuresArray = features.split(',');
-            filter.features = { $in: featuresArray };
+        // Filter by features
+        if (features) {
+            const featuresArray = features.split(',').map(item => item.trim());
+            assetFilter.features = { $in: featuresArray };
         }
 
-        // Get all assets without pagination
-        const assets = await Asset.find(filter)
-            .populate('ownerId', 'name email')
-            .sort({ createdAt: -1 });
+        // --- New logic for date-based availability filtering ---
+        if (startDate && endDate) {
+            const queryStartDate = new Date(startDate);
+            const queryEndDate = new Date(endDate);
 
-        res.json(assets);
+            // Find asset IDs that have conflicting bookings within the specified date range
+            const conflictingBookings = await Booking.find({
+                bookingStatus: { $in: ['PENDING', 'ACTIVE'] }, // Only consider pending or active bookings
+                $or: [
+                    // Case 1: Existing booking starts within the query range
+                    { startDate: { $gte: queryStartDate, $lte: queryEndDate } },
+                    // Case 2: Existing booking ends within the query range
+                    { endDate: { $gte: queryStartDate, $lte: queryEndDate } },
+                    // Case 3: Existing booking completely encompasses the query range
+                    { startDate: { $lte: queryStartDate }, endDate: { $gte: queryEndDate } },
+                    // Case 4: Query range completely encompasses an existing booking
+                    { startDate: { $gte: queryStartDate }, endDate: { $lte: queryEndDate } }
+                ]
+            }).select('assetId'); // Select only the assetId to minimize data transfer
+
+            // Extract unique asset IDs from conflicting bookings
+            const bookedAssetIds = conflictingBookings.map(booking => booking.assetId);
+
+            // Add a filter to exclude these booked asset IDs from the asset search
+            if (bookedAssetIds.length > 0) {
+                assetFilter._id = { $nin: bookedAssetIds };
+            }
+        }
+
+        // Get all assets based on the constructed filter
+        const assets = await Asset.find(assetFilter)
+            .populate('ownerId', 'name email') // Populate owner details
+            .sort({ createdAt: -1 }); // Sort by creation date descending
+
+        res.json(assets); // Send the filtered assets as a JSON response
 
     } catch (error) {
+        // Pass any errors to the next middleware (error handling middleware)
         next(error);
     }
 };
