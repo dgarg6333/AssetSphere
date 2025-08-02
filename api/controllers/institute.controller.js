@@ -30,3 +30,19 @@ export const addInstitute = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getInstituteByEmail = async (req, res, next) => { 
+  try {
+    const { emailId } = req.params;
+
+    // Find the institute by owner's email
+    const institute = await Institute.findOne({ ownerEmail: emailId });
+    if (!institute) {
+      return res.status(404).json({ message: "Institute not found." });
+    }
+
+    res.status(200).json(institute);
+  } catch (error) {
+    next(error);
+  }
+}

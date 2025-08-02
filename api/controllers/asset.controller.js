@@ -28,6 +28,8 @@ export const getAsset = async (req, res, next) => {
             endDate    // New query parameter
         } = req.query;
 
+        let assetFilter = {};
+
         // Filter by city
         if (city) {
             assetFilter['address.city'] = { $regex: city, $options: 'i' };

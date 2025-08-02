@@ -1,7 +1,7 @@
-import {useDispatch, useSelector} from 'react-redux';
-import {TextInput , Alert, Modal} from 'flowbite-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { TextInput, Alert, Modal } from 'flowbite-react';
 import { useState, useRef, useEffect } from 'react';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -15,47 +15,43 @@ import {
   signoutSuccess,
 } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function DashProfile() {
-  const {currentUser, error, loading } = useSelector(state=>state.user);
-  const [imageFile , setImageFile]=useState(null);
+  const { currentUser, error, loading } = useSelector(state => state.user);
+  const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
-  const [formData, setFormData]=useState({});
+  const [formData, setFormData] = useState({});
   const [showModal, setShowModal] = useState(false);
+  
+  // New state for handling the institute check
+  const [instituteLoading, setInstituteLoading] = useState(false);
+  const [instituteError, setInstituteError] = useState(null);
+
   const dispatch = useDispatch();
   const filePickerRef = useRef();
   const navigate = useNavigate();
-  const handleImageChange =(e)=>{
+
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
-  useEffect(()=>{
-    if(imageFile){
+
+  useEffect(() => {
+    if (imageFile) {
       uploadImage();
     }
-  },[imageFile]);
+  }, [imageFile]);
 
   const uploadImage = async () => {
-    // service firebase.storage {
-    //   match /b/{bucket}/o {
-    //     match /{allPaths=**} {
-    //       allow read;
-    //       allow write: if
-    //       request.resource.size < 2 * 1024 * 1024 &&
-    //       request.resource.contentType.matches('image/.*')
-    //     }
-    //   }
-    // }
     setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
@@ -65,15 +61,11 @@ export default function DashProfile() {
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImageFileUploadProgress(progress.toFixed(0));
       },
       (error) => {
-        setImageFileUploadError(
-          'Could not upload image (File must be less than 2MB)'
-        );
+        setImageFileUploadError('Could not upload image (File must be less than 2MB)');
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
@@ -82,16 +74,17 @@ export default function DashProfile() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
-          setFormData({...formData,profilePicture:downloadURL});
+          setFormData({ ...formData, profilePicture: downloadURL });
           setImageFileUploading(false);
         });
       }
     );
   };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdateUserError(null);
@@ -163,15 +156,44 @@ export default function DashProfile() {
     }
   };
 
+  // New function to handle the "Register an Asset" button click
+  const handleRegisterAsset = async () => {
+    setInstituteLoading(true);
+    setInstituteError(null);
+
+    if (!currentUser || !currentUser.email) {
+      setInstituteError("Please log in to add an asset.");
+      setInstituteLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/institute/${currentUser.email}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setInstituteError( "Institute not found. Please register and get approval from an admin.");
+      } else {
+        // Navigate to the create asset page and pass the institute details
+        navigate('/create-asset', { state: { instituteDetails: data } });
+      }
+    } catch (err) {
+      setInstituteError(err.message || 'Network error. Could not fetch institute details.');
+    } finally {
+      setInstituteLoading(false);
+    }
+  };
+
+
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <input type="file" accept='image/*' onChange={handleImageChange} 
+        <input type="file" accept='image/*' onChange={handleImageChange}
           ref={filePickerRef} hidden />
-        <div className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full' 
-        onClick={() => filePickerRef.current.click()}>
-            {imageFileUploadProgress && (
+        <div className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'
+          onClick={() => filePickerRef.current.click()}>
+          {imageFileUploadProgress && (
             <CircularProgressbar
               value={imageFileUploadProgress || 0}
               text={`${imageFileUploadProgress}%`}
@@ -187,17 +209,17 @@ export default function DashProfile() {
                 path: {
                   stroke: `rgba(30, 58, 138, ${ // Updated to blue-800 for consistent theme
                     imageFileUploadProgress / 100
-                  })`, 
+                  })`,
                 },
               }}
             />
           )}
-          <img src={imageFileUrl || currentUser.profilePicture} alt="user" 
+          <img src={imageFileUrl || currentUser.profilePicture} alt="user"
             className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
               'opacity-60'
-            }`}></img>
+            }`} />
         </div>
         {imageFileUploadError && (
           <Alert color='failure'>{imageFileUploadError}</Alert>
@@ -222,31 +244,41 @@ export default function DashProfile() {
           placeholder='password'
           onChange={handleChange}
         />
-        <button 
-          type='submit' 
-          className='w-full py-2 rounded-lg 
-                     bg-blue-800 text-white font-semibold 
-                     hover:bg-blue-900 
-                     transition-colors duration-200 
+        <button
+          type='submit'
+          className='w-full py-2 rounded-lg
+                     bg-blue-800 text-white font-semibold
+                     hover:bg-blue-900
+                     transition-colors duration-200
                      disabled:opacity-50 disabled:cursor-not-allowed'
-          disabled={loading || imageFileUploading} 
+          disabled={loading || imageFileUploading}
         >
           {loading ? 'Loading...' : 'Update Profile'}
-        </button> 
-        {/* Removed conditional rendering for the Register an Asset button */}
-        <Link to={'/create-asset'}>
-            <button
-              type='button'
-              className='w-full py-2 rounded-lg 
-                         bg-yellow-400 text-white font-semibold 
-                         hover:bg-yellow-500
-                         transition-colors duration-200'
-            >
-              Register an Asset
-            </button>
-          </Link>
+        </button>
+
+        {/* The new "Register an Asset" button with onClick handler */}
+        <button
+          type='button'
+          className='w-full py-2 rounded-lg
+                      bg-yellow-400 text-white font-semibold
+                      hover:bg-yellow-500
+                      transition-colors duration-200
+                      disabled:opacity-50 disabled:cursor-not-allowed'
+          onClick={handleRegisterAsset}
+          disabled={instituteLoading}
+        >
+          {instituteLoading ? 'Checking Institute...' : 'Register an Asset'}
+        </button>
 
       </form>
+
+      {/* Display the new institute-related error here */}
+      {instituteError && (
+        <Alert color='failure' className='mt-5'>
+          {instituteError}
+        </Alert>
+      )}
+
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
           {updateUserSuccess}
@@ -258,8 +290,8 @@ export default function DashProfile() {
         </Alert>
       )}
       <div className='text-red-500 flex justify-between mt-5'>
-        <span onClick={()=>setShowModal(true)} className='cursor-pointer'>  Delete Account</span>
-        <span  onClick={handleSignout} className='cursor-pointer'>  Sign Out</span>
+        <span onClick={() => setShowModal(true)} className='cursor-pointer'>  Delete Account</span>
+        <span onClick={handleSignout} className='cursor-pointer'>  Sign Out</span>
       </div>
       {error && (
         <Alert color='failure' className='mt-5'>

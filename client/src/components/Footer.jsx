@@ -1,8 +1,11 @@
 import { Footer } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsInstagram, BsTwitter, BsGithub } from 'react-icons/bs';
+import { BsTwitter, BsGithub } from 'react-icons/bs';
+import { useSelector } from 'react-redux'; 
+import RegisterInstituteModal from './registerInstitute';
 
 export default function FooterCom() {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     // Changed top border color to blue-800 for consistency
     <Footer container className='border border-t-8 border-blue-800'>
@@ -19,6 +22,10 @@ export default function FooterCom() {
                 CTI
               </span>
             </Link>
+            {/* Admin button for registering/approving institutes */}
+            {currentUser && currentUser.isAdmin && (
+              <RegisterInstituteModal />
+            )}
           </div>
           <div className='grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6'>
             <div>

@@ -4,7 +4,7 @@ import { getStorage, uploadBytesResumable, getDownloadURL, ref } from 'firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , useLocation } from 'react-router-dom';
 
 export default function CreateAsset() {
   // State variables for form data, UI feedback, and loading states
@@ -14,9 +14,11 @@ export default function CreateAsset() {
   const [loadingDistrictData, setLoadingDistrictData] = useState(false);
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   // --- Enums/Lists for dropdowns and checkboxes ---
   const assetTypes = ['Hall', 'Lab', 'Hostel', 'ClassRoom'];
+  const categories = ['ATI', 'CTI'];
   const featuresList = [
     'AC',
     'INTERNET',
@@ -87,6 +89,8 @@ export default function CreateAsset() {
     name: '',
     institutionName: '',
     type: assetTypes[0],
+    category : categories[0],
+    website: '',
     address: {
       street: '',
       buildingName: '',
@@ -107,6 +111,18 @@ export default function CreateAsset() {
   // Define your default image URL here
   const DEFAULT_IMAGE_URL = 'https://via.placeholder.com/600x400?text=No+Image+Available'; // Example placeholder URL (changed to a more reliable placeholder)
 
+  /**
+   * useEffect to check for passed institute details and pre-fill the form.
+   */
+  useEffect(() => {
+    const { instituteDetails } = location.state || {};
+      if (instituteDetails) {
+      setFormData(prev => ({
+      ...prev,
+      institutionName: instituteDetails.institutionName,
+      }));
+    }
+  }, [location.state]);
   // --- Helper Functions ---
 
   /**
@@ -387,6 +403,81 @@ export default function CreateAsset() {
                 ))}
               </Select>
             </div>
+            <div>
+              <Label htmlFor='website' value='Website' />
+              <TextInput
+                type='url'
+                placeholder='www.example.com'
+                required
+                id='website'
+                onChange={handleChange}
+                value={formData.website}
+                className='mt-1'
+                // Apply custom focus styles for consistency
+                theme={{
+                  "field": {
+                    "input": {
+                      "base": "block w-full",
+                      "sizes": {
+                        "sm": "p-2 sm:text-xs",
+                        "md": "p-2.5 text-sm",
+                        "lg": "p-4 sm:text-base"
+                      },
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <Label htmlFor='category' value='Category' />
+              <Select
+                id='category'
+                onChange={handleChange}
+                value={formData.category}
+                className='mt-1'
+                theme={{
+                  "field": {
+                    "select": {
+                      "base": "block w-full",
+                      "colors": {
+                        "gray": "bg-gray-50 border-gray-300 text-gray-900 focus:border-yellow-400 focus:ring-yellow-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow-400"
+                      },
+                      "withIcon": {
+                        "on": "pr-10",
+                        "off": ""
+                      },
+                      "withAddon": {
+                        "on": "rounded-r-lg",
+                        "off": "rounded-lg"
+                      },
+                      "withShadow": {
+                        "on": "shadow-sm",
+                        "off": ""
+                      }
+                    }
+                  }
+                }}
+              >
+                {categories.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </Select>
+            </div>
             <div className='md:col-span-2'>
               <Label htmlFor='institutionName' value='Institution Name' />
               <TextInput
@@ -396,6 +487,7 @@ export default function CreateAsset() {
                 id='institutionName'
                 onChange={handleChange}
                 value={formData.institutionName}
+                readOnly
                 className='mt-1'
                 theme={{
                   "field": {

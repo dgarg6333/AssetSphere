@@ -26,6 +26,17 @@ const assetSchema = new mongoose.Schema(
       enum: ['Hall', 'Lab', 'Hostel', 'ClassRoom'],
       index: true
     },
+    category: {
+      type: String,
+      required: true,
+      enum: ['ATI' , 'CTI'], // ATI for Academic Training Institute, CTI for Corporate Training Institute
+      index: true
+    },
+    website: {
+      type: String,
+      trim: true, 
+      match: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/
+    },
     address: {
       street: { type: String, required: true, trim: true },
       buildingName: { type: String, trim: true },

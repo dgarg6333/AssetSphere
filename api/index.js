@@ -6,7 +6,7 @@ import authRoutes from './routes/auth.route.js';
 import assetRoutes from './routes/asset.route.js';
 import cookieParser from 'cookie-parser';
 import bookingRoutes from './routes/booking.route.js';
-import instituteRoutes from '/routes/institute.route.js';
+import instituteRoutes from './routes/institute.route.js';
 import path from 'path';
 
 dotenv.config();
