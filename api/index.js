@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.route.js';
 import assetRoutes from './routes/asset.route.js';
 import cookieParser from 'cookie-parser';
 import bookingRoutes from './routes/booking.route.js';
+import instituteRoutes from '/routes/institute.route.js';
 import path from 'path';
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/asset', assetRoutes);
 app.use('/api/booking', bookingRoutes);
+app.use('/api/institute', instituteRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

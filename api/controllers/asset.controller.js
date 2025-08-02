@@ -28,9 +28,6 @@ export const getAsset = async (req, res, next) => {
             endDate    // New query parameter
         } = req.query;
 
-        // Build simple filter for Asset model
-        let assetFilter = { status: 'AVAILABLE' };
-
         // Filter by city
         if (city) {
             assetFilter['address.city'] = { $regex: city, $options: 'i' };
@@ -69,7 +66,7 @@ export const getAsset = async (req, res, next) => {
 
             // Find asset IDs that have conflicting bookings within the specified date range
             const conflictingBookings = await Booking.find({
-                bookingStatus: { $in: ['PENDING', 'ACTIVE'] }, // Only consider pending or active bookings
+                // bookingStatus: { $in: ['PENDING', 'ACTIVE'] }, // Only consider pending or active bookings
                 $or: [
                     // Case 1: Existing booking starts within the query range
                     { startDate: { $gte: queryStartDate, $lte: queryEndDate } },

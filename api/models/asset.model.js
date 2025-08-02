@@ -80,12 +80,12 @@ const assetSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    status: {
-      type: String,
-      enum: ['AVAILABLE', 'BOOKED', 'DELETED'],
-      default: 'AVAILABLE',
-      index: true
-    },
+    // status: {
+    //   type: String,
+    //   enum: ['AVAILABLE', 'BOOKED', 'DELETED'],
+    //   default: 'AVAILABLE',
+    //   index: true
+    // },
     image: {
       type : String,
       default : "https://www.google.com/imgres?q=conference%20hall%20&imgurl=https%3A%2F%2Fwww.tomarhospitality.com%2Fassets%2Fimg%2Fslider%2F4.jpg&imgrefurl=https%3A%2F%2Fwww.tomarhospitality.com%2F&docid=_Jl9jJRnarZ-xM&tbnid=mri1VhScoESaNM&vet=12ahUKEwi9u5rz4s-OAxXPwTgGHXNLIVYQM3oECBMQAA..i&w=1800&h=1000&hcb=2&ved=2ahUKEwi9u5rz4s-OAxXPwTgGHXNLIVYQM3oECBMQAA"

@@ -24,12 +24,12 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       index: true
     },
-    bookingStatus: {
-      type: String,
-      enum: ['PENDING', 'ACTIVE', 'COMPLETED'],
-      default: 'PENDING',
-      index: true
-    },
+    // bookingStatus: {
+    //   type: String,
+    //   enum: ['PENDING', 'ACTIVE', 'COMPLETED'],
+    //   default: 'PENDING',
+    //   index: true
+    // },
     purpose: {
       type: String,
       required: true,
