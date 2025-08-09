@@ -99,4 +99,4 @@ flowchart TD
     E --> F[Availability Check]
     F --> G[Booking Confirmed]
     E --> H[Booking Rejected if Unavailable]
-    G --> I[Cancellation up to 24h before start]
+    G --> I[Cancellation Flow]
