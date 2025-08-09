@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/',  getAsset);
 router.post('/', verifyToken, addAsset);
 router.get('/:id' , getAssetById);
-router.get('/myasset/:userId', myAssets);
+router.get('/myasset/:userId', verifyToken, myAssets);
 
 export default router;
