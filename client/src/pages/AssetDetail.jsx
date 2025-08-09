@@ -356,7 +356,7 @@ export default function AssetDetail() {
           
           <div className="pt-6">
             <button
-              // onClick={handleBookNow}
+              onClick={handleBookNow}
               className={`
                 w-full flex items-center justify-center py-3 rounded-lg text-xl font-bold text-white
                 bg-yellow-400 hover:bg-yellow-500 // Changed from gradient to solid yellow

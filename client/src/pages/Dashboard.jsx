@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DashProfile from '../components/DashProfile';
-// import DashAssets from '../components/DashAssets'; // Keep commented as per your original code
-import DashSidebar from '../components/DashSidebar'
+import DashSidebar from '../components/DashSidebar';
+import MyBookings from '../components/DashBooking';
+import DashAssets from '../components/DashAsset';
 
 export default function Dashboard() {
   const location = useLocation();
@@ -24,8 +25,10 @@ export default function Dashboard() {
       </div>
       {/* profile... */}
       {tab === 'profile' && <DashProfile />}
-      {/* assets... (uncomment when DashAssets is ready) */}
-      {/* {tab === 'assets' && <DashAssets />} */}
+      {/*My Bookings..*/}
+      {tab === 'bookings' && <MyBookings />}
+      {/*My Assets..*/}
+      {tab === 'assets' && <DashAssets />}
     </div>
   );
 }

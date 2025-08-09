@@ -19,7 +19,13 @@ const instituteSchema = new mongoose.Schema(
       type: String,
       index: true,
       unique: true
-    }
+    },
+    status : {
+      type: String,
+      enum: ['ACTIVE', 'INACTIVE'],
+      default: 'ACTIVE',
+      index: true
+    },
   }
 );
 

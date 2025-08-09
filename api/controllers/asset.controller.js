@@ -1,5 +1,6 @@
 import Asset from '../models/asset.model.js';
 import Booking from '../models/booking.model.js';
+import mongoose from 'mongoose';
 
 export const addAsset = async (req, res, next) => {
     try {
@@ -117,3 +118,27 @@ export const getAssetById = async (req, res) => {
       res.status(500).json({ error: 'Server error' });
     }
 };
+
+export const myAssets = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        // Validate if the provided userId is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid user ID format" });
+        }
+        const ownerId = new mongoose.Types.ObjectId(userId);
+        // Find assets owned by the user
+        const assets = await Asset.find({ ownerId: ownerId })
+            .populate('ownerId', 'name email') // Populate owner details
+            .sort({ createdAt: -1 }); // Sort by creation date descending
+
+        if (assets.length === 0) {
+            return res.status(404).json({ message: "No assets found for this user" });
+        }
+
+        res.status(200).json(assets);
+    } catch (error) {
+        next(error);
+    }
+}

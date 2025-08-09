@@ -3,9 +3,7 @@ import {
   HiUser,
   HiArrowSmRight,
   HiDocumentText,
-  HiOutlineUserGroup,
-  HiAnnotation,
-  HiChartPie,
+  HiOutlineUserGroup
 } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -59,6 +57,23 @@ export default function DashSidebar() {
             </Sidebar.Item>
           </Link>
           {/*my booking and my asset page */}
+          <Link to='/dashboard?tab=bookings'>
+            <Sidebar.Item
+              active={tab === 'bookings'}
+              icon={HiDocumentText}
+            >
+              My Bookings
+            </Sidebar.Item>
+          </Link>
+          {/*My Assets page */}
+          <Link to='/dashboard?tab=assets'>
+            <Sidebar.Item
+              active={tab === 'assets'}
+              icon={HiOutlineUserGroup}
+            >
+              My Assets
+            </Sidebar.Item>
+          </Link>
           <Sidebar.Item
             icon={HiArrowSmRight}
             className='cursor-pointer'

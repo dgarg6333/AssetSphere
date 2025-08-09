@@ -9,11 +9,11 @@ import ThemeProvider from './components/ThemeProvider.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <PersistGate persistor={persistor}>
-    <Provider store={store}>
-      <ThemeProvider >
+  <Provider store={store}>
+    <PersistGate persistor={persistor} loading={null}>
+      <ThemeProvider>
         <App />
       </ThemeProvider>
-    </Provider>
-  </PersistGate>
+    </PersistGate>
+  </Provider>
 );

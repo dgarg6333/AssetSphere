@@ -17,7 +17,7 @@ export const addInstitute = async (req, res, next) => {
 
     // 3. Create a new institute
     const newInstitute = new Institute({
-      ...req.body
+      ...req.body,
     });
 
     // 4. Save the new institute to the database
