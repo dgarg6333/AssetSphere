@@ -1,6 +1,9 @@
 import Booking from "../models/booking.model.js";
 import Asset from "../models/asset.model.js";
 import mongoose from 'mongoose';
+import { sendBookingConfirmation } from "../utils/userEmail.js";
+import Institute from "../models/institute.model.js";
+import User from "../models/user.model.js";
 
 /**
  * Normalizes a date to the start of the day (00:00:00.000).
@@ -162,6 +165,22 @@ export const createBooking = async (req, res, next) => {
     });
 
     const savedBooking = await newBooking.save({ session });
+
+    const instituteId = asset.instituteId;
+    console.log("Institute ID from asset:", instituteId);
+    const institute = await Institute.findById(instituteId);
+    if (!institute) {
+      return res.status(404).json({ message: "Institute not found" });
+    }
+    console.log("Institute details:", institute);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found for sending email");
+    }
+
+    //send email notification to user.
+    await sendBookingConfirmation(user, savedBooking, asset , institute);
     await session.commitTransaction();
 
     // 8. Prepare and send the success response

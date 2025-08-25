@@ -20,6 +20,12 @@ const assetSchema = new mongoose.Schema(
       index: true,
       trim: true
     },
+    instituteId : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Institute',
+      required: true,
+      index: true
+    },
     type: {
       type: String,
       required: true,

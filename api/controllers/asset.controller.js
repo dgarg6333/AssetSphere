@@ -1,12 +1,26 @@
 import Asset from '../models/asset.model.js';
 import Booking from '../models/booking.model.js';
 import mongoose from 'mongoose';
+import Institute from '../models/institute.model.js';
+import User from '../models/user.model.js';
 
 export const addAsset = async (req, res, next) => {
     try {
-        const id = req.user.id; // Assuming user is set by verifyToken middleware
+        const id = req.user.id;
+        const userId = new mongoose.Types.ObjectId(id);
+        const user = await User.findById(userId);
+        if (!user) {
+        return res.status(404).json({ message: "User not found." });
+        }
+
+        const institute = await Institute.findOne({ ownerEmail: user.email });
+        if (!institute) {
+        return res.status(400).json({ message: "No institute found for this user." });
+        }
+        // Create a new asset
         const newAsset = new Asset({
             ...req.body,
+            instituteId: institute._id,
             ownerId: id 
         });
         const savedAsset = await newAsset.save();
