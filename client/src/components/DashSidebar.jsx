@@ -57,23 +57,23 @@ export default function DashSidebar() {
             </Sidebar.Item>
           </Link>
           {/*my booking and my asset page */}
-          {/* <Link to='/dashboard?tab=bookings'>
+          <Link to='/dashboard?tab=bookings'>
             <Sidebar.Item
               active={tab === 'bookings'}
               icon={HiDocumentText}
             >
               My Bookings
             </Sidebar.Item>
-          </Link> */}
+          </Link>
           {/*My Assets page */}
-          {/* <Link to='/dashboard?tab=assets'>
+          <Link to='/dashboard?tab=assets'>
             <Sidebar.Item
               active={tab === 'assets'}
               icon={HiOutlineUserGroup}
             >
               My Assets
             </Sidebar.Item>
-          </Link> */}
+          </Link>
           <Sidebar.Item
             icon={HiArrowSmRight}
             className='cursor-pointer'
