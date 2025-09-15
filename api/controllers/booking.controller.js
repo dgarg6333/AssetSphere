@@ -83,6 +83,7 @@ export const createBooking = async (req, res, next) => {
     await session.startTransaction();
 
     const userId = req.user.id;
+    // const userId = "123456789012345678901234"; // Temporary hardcoded userId for testing
     const { assetId } = req.params;
     const bookingData = req.body;
 
@@ -167,16 +168,14 @@ export const createBooking = async (req, res, next) => {
     const savedBooking = await newBooking.save({ session });
 
     const instituteId = asset.instituteId;
-    console.log("Institute ID from asset:", instituteId);
     const institute = await Institute.findById(instituteId);
     if (!institute) {
       return res.status(404).json({ message: "Institute not found" });
     }
-    console.log("Institute details:", institute);
 
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error("User not found for sending email");
+      throw new Error("User not found for sending confirmation email");
     }
 
     //send email notification to user.
