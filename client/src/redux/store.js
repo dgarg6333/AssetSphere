@@ -13,7 +13,6 @@ const persistConfig = {
   key: 'root',
   storage,
   version: 1,
-  whitelist: ['theme'], // Specify which reducers to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
