@@ -7,12 +7,33 @@ import dotenv from "dotenv";
 // For simplicity, we'll assume `user` and `owner` documents are passed to the function.
 dotenv.config();
 
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.ethereal.email",
+//   port: 587,
+//   secure: false, // true for 465, false for other ports
+//   auth: {
+//     user: "maddison53@ethereal.email",
+//     pass: "jn7jnAPss4f63QBp6D",
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+    service: 'gmail',
 });
 
 const getFullAddress = (address) => {
