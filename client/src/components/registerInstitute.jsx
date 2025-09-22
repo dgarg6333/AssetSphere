@@ -93,7 +93,7 @@ export default function RegisterInstituteModal() {
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="ownerEmail" value="Owner Email" />
+                <Label htmlFor="ownerEmail" value="Institute Email" />
               </div>
               <TextInput
                 id="ownerEmail"
@@ -106,7 +106,7 @@ export default function RegisterInstituteModal() {
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="ownerphone" value="Owner Phone (Optional)" />
+                <Label htmlFor="ownerphone" value="Institute Phone No." />
               </div>
               <TextInput
                 id="ownerphone"

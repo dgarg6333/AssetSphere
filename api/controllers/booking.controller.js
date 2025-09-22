@@ -170,7 +170,7 @@ export const createBooking = async (req, res, next) => {
     const instituteId = asset.instituteId;
     const institute = await Institute.findById(instituteId);
     if (!institute) {
-      return res.status(404).json({ message: "Institute not found" });
+      return res.status(404).json({ message: "Institute is not Approved by Admin" });
     }
 
     const user = await User.findById(userId);

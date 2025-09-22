@@ -1,5 +1,5 @@
 import { Alert, Label, Spinner, TextInput } from 'flowbite-react'; // Removed Button from import
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInFailure, signInSuccess } from '../redux/user/userSlice';
@@ -7,9 +7,16 @@ import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const { currentUser, loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/');
+    }
+  }, [currentUser, navigate]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
@@ -28,10 +35,19 @@ export default function SignIn() {
       });
 
       const data = await res.json();
+
+      // Check if the HTTP response was NOT successful (status code is not in the 200-299 range)
+      if (!res.ok) {
+        // Dispatch the failure action with the message from the API response
+        dispatch(signInFailure(data.message));
+        return; // Exit the function to prevent further execution
+      }
+
+      // If the HTTP response was successful, proceed to check the API's 'success' property
       if (data.success === false) {
         dispatch(signInFailure(data.message));
-      }
-      if (res.ok) {
+      } else {
+        // If both HTTP and API-level success checks pass, dispatch the success action
         dispatch(signInSuccess(data));
         navigate('/');
       }

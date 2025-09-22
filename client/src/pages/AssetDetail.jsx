@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCalendarAlt, FaEnvelope } from 'react-icons/fa';
+import { FaUsers, FaBuilding, FaTag, FaMapMarkerAlt, FaCalendarAlt, FaEnvelope , FaGlobe, FaLayerGroup } from 'react-icons/fa';
 
 // Booking Modal Component
 function BookingModal({ isOpen, onClose, assetName, assetId, theme }) {
@@ -275,27 +275,66 @@ export default function AssetDetail() {
 
         {/* Details Section */}
         <div className="p-8 space-y-6">
-          <h2 className={`text-4xl font-extrabold ${headingColor}`}>{asset.name}</h2>
+          <h2 className={`text-4xl font-extrabold ${headingColor}`}>
+            {asset.name}
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className={`flex items-center ${subTextColor}`}>
               <FaMapMarkerAlt className="mr-3 text-xl text-red-500" />
-              <p className="text-lg">{getFullAddress(asset.address)}</p>
+              <p className="text-lg">
+                <strong>Address:</strong> {getFullAddress(asset.address)}
+              </p>
             </div>
+
             <div className={`flex items-center ${subTextColor}`}>
               <FaBuilding className="mr-3 text-xl text-indigo-500" />
-              <p className="text-lg"><strong>Institution:</strong> {asset.institutionName}</p>
+              <p className="text-lg">
+                <strong>Institution:</strong> {asset.institutionName}
+              </p>
             </div>
+
             <div className={`flex items-center ${subTextColor}`}>
               <FaTag className="mr-3 text-xl text-purple-500" />
-              <p className="text-lg"><strong>Type:</strong> {asset.type}</p>
+              <p className="text-lg">
+                <strong>Type:</strong> {asset.type}
+              </p>
             </div>
+
             <div className={`flex items-center ${subTextColor}`}>
               <FaUsers className="mr-3 text-xl text-blue-700" />
-              <p className="text-lg"><strong>Capacity:</strong> {asset.capacity} people</p>
+              <p className="text-lg">
+                <strong>Capacity:</strong> {asset.capacity} people
+              </p>
             </div>
-          </div>
 
+            {asset.website && (
+              <div className={`flex items-center ${subTextColor}`}>
+                <FaGlobe className="mr-3 text-xl text-green-600" />
+                <p className="text-lg">
+                  <strong>Website:</strong>{' '}
+                  <a
+                    href={asset.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    {asset.website}
+                  </a>
+                </p>
+              </div>
+            )}
+
+            {asset.category && (
+              <div className={`flex items-center ${subTextColor}`}>
+                <FaLayerGroup className="mr-3 text-xl text-pink-500" />
+                <p className="text-lg">
+                  <strong>Category:</strong> {asset.category}
+                </p>
+              </div>
+            )}
+          </div>
+         
           <hr className={`border-t ${borderColor}`} />
 
           {/* Description Section */}

@@ -35,6 +35,13 @@ export default function SignUp() {
       setLoading(false);
       if (res.ok) {
         navigate('/sign-in');
+      }else{
+        if(data.message=="E11000 duplicate key error collection: mern-blog.users index: username_1 dup key: { username: \"12345\" }"){
+          data.message="Username already exists"
+        }else if(data.message=="E11000 duplicate key error collection: mern-blog.users index: email_1 dup key: { email: \"123456yui12werf1qwedf@gmail.com\" }"){
+          data.message="Email already exists"
+        }
+        setErrorMessage(data.message || 'Sign up failed. Please try again.');
       }
     } catch (error) {
       setErrorMessage(error.message);
