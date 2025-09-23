@@ -7,6 +7,7 @@ import assetRoutes from './routes/asset.route.js';
 import cookieParser from 'cookie-parser';
 import bookingRoutes from './routes/booking.route.js';
 import instituteRoutes from './routes/institute.route.js';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -19,6 +20,17 @@ mongoose.connect(process.env.MONGO,{
 
 
 const app = express();
+app.use(cors({
+  origin: [
+    'https://asset-sphere-frontend.vercel.app',
+    'https://asset-sphere-frontend-git-main-deepanshu-gargs-projects.vercel.app',
+    'https://asset-sphere-frontend-m5sontiln-deepanshu-gargs-projects.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
+
 
 app.use(express.json());
 app.use(cookieParser());
