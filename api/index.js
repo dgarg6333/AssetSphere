@@ -7,7 +7,6 @@ import assetRoutes from './routes/asset.route.js';
 import cookieParser from 'cookie-parser';
 import bookingRoutes from './routes/booking.route.js';
 import instituteRoutes from './routes/institute.route.js';
-import path from 'path';
 
 dotenv.config();
 
@@ -18,7 +17,6 @@ mongoose.connect(process.env.MONGO,{
 .then(()=>{console.log('database is connected')})
 .catch((err)=>{console.log(err)});
 
-const __dirname = path.resolve();
 
 const app = express();
 
@@ -35,11 +33,10 @@ app.use('/api/asset', assetRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/institute', instituteRoutes);
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+app.get('/', (req, res) => {
+  res.json({ message: 'AssetSphere Backend API is running!' });
 });
+
 
 app.use((err,req,res,next)=>{
     const statusCode=err.statusCode || 500;
