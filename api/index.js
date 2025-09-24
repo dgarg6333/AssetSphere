@@ -7,7 +7,7 @@ import assetRoutes from './routes/asset.route.js';
 import cookieParser from 'cookie-parser';
 import bookingRoutes from './routes/booking.route.js';
 import instituteRoutes from './routes/institute.route.js';
-import path from 'path';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -18,9 +18,19 @@ mongoose.connect(process.env.MONGO,{
 .then(()=>{console.log('database is connected')})
 .catch((err)=>{console.log(err)});
 
-const __dirname = path.resolve();
 
 const app = express();
+app.use(cors({
+  origin: [
+    'https://asset-sphere-frontend.vercel.app',
+    'https://asset-sphere-frontend-git-main-deepanshu-gargs-projects.vercel.app',
+    'https://asset-sphere-frontend-m5sontiln-deepanshu-gargs-projects.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,11 +45,10 @@ app.use('/api/asset', assetRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/institute', instituteRoutes);
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+app.get('/', (req, res) => {
+  res.json({ message: 'AssetSphere Backend API is running!' });
 });
+
 
 app.use((err,req,res,next)=>{
     const statusCode=err.statusCode || 500;
