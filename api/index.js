@@ -11,12 +11,31 @@ import cors from 'cors';
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(()=>{console.log('database is connected')})
-.catch((err)=>{console.log(err)});
+// mongoose.connect(process.env.MONGO,{
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// })
+// .then(()=>{console.log('database is connected')})
+// .catch((err)=>{console.log(err)});
+
+const connectDB = async () => {
+    try {
+      await mongoose.connect(process.env.MONGO, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 30000, // 30 seconds
+        socketTimeoutMS: 45000, // 45 seconds
+        bufferMaxEntries: 0,
+        maxPoolSize: 10
+      });
+      console.log('Database is connected');
+    } catch (error) {
+      console.error('Database connection failed:', error);
+      process.exit(1);
+    }
+  };
+
+  connectDB();
 
 
 const app = express();
